@@ -1,0 +1,197 @@
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+
+import '../../utils/config.dart';
+import '../../utils/util.dart';
+import '../../utils/custom_dio.dart';
+
+import 'model.dart';
+
+class AuthService {
+  AuthModel auth = AuthModel();
+
+  Future<void> signUpUser(int typeUser) async {
+    String _uri = "";
+    switch (typeUser) {
+      case 0:
+        _uri = "${Config.uri}usuario/cliente/";
+        break;
+      default:
+        _uri = "${Config.uri}usuario/profissional/";
+    }
+    try {
+      final CustomDio _dio = CustomDio(_uri);
+      FormData _data = FormData.fromMap({
+        "cpf": auth.cpf,
+        "nome": auth.name,
+        "email": auth.email,
+        "telefone": auth.phoneNumber,
+        "password": auth.password,
+        "firebase": auth.firebaseId
+      });
+      final data = await _dio.postHttp(_data, uri: _uri);
+      if (data != null) {
+        _success("Usuário criado com sucesso", statusCode: Process.statusCode);
+      }
+    } catch (e, exception) {
+      _error(e.toString(), exception.toString());
+    }
+  }
+
+  Future<void> signUpUserFirebase(String url) async {
+    try {
+      final CustomDio _dio = CustomDio(url);
+      var _dataPost = json.encode({
+        'email': auth.email,
+        'password': auth.password,
+        'returnSecureToken': true
+      });
+      final data = await _dio.postHttp(_dataPost, uri: url);
+      if (data != null) {
+        auth.firebaseId = data['localId'];
+        signUpUser(0);
+      }
+    } catch (e, exception) {
+      _error(e.toString(), exception.toString());
+    }
+  }
+
+  Future<AuthModel> signIn(String login, String password) async {
+    String _uri = "${Config.uriAuth}token/";
+    AuthModel _authModel = AuthModel();
+    try {
+      CustomDio _dio = CustomDio(_uri);
+      _dio.makeHeadersAuthentication();
+      FormData _data =
+          FormData.fromMap({"username": login, "password": password});
+      var dataResponse = await _dio.postHttp(_data, uri: _uri);
+      if (dataResponse != null) {
+        _authModel.token = dataResponse['access'];
+        _success("Usuário logado com sucesso", statusCode: 200);
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return _authModel;
+  }
+
+  Future<AuthModel> login() async {
+    String _url = "";
+    try {
+      final CustomDio _dio = CustomDio(_url);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        for (final item in data) {
+          auth = AuthModel.fromMap(item);
+        }
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return auth;
+  }
+
+  Future<bool> logout() async {
+    String _url = "";
+    try {
+      final CustomDio _dio = CustomDio(_url);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        return true;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return false;
+  }
+
+  Future<bool> changePassword() async {
+    String _url = "";
+    try {
+      final CustomDio _dio = CustomDio(_url);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        return true;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return false;
+  }
+
+  Future<bool> recoverPassword() async {
+    String _url = "";
+    try {
+      final CustomDio _dio = CustomDio(_url);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        return true;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return false;
+  }
+
+  Future<AuthModel> createAccount() async {
+    String _url = "";
+    try {
+      final CustomDio _dio = CustomDio(_url);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        return AuthModel.fromMap(data);
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return null;
+  }
+
+  Future<bool> disableAccount() async {
+    String _url = "";
+    try {
+      final CustomDio _dio = CustomDio(_url);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        return true;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return false;
+  }
+
+  Future<bool> excludeAccount() async {
+    String _url = "";
+    try {
+      final CustomDio _dio = CustomDio(_url);
+      final data = await _dio.getHttp();
+      if (data != null) {
+        return true;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return false;
+  }
+
+
+  void _success(String message, {int statusCode}) async {
+    try {
+      Process.finishSuccess(message, status: statusCode);
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception, {int statusCode}) async {
+    try {
+      if (Process.isDioError == false) {
+        Process.finishError(error, exception, status: statusCode);
+      }
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+}

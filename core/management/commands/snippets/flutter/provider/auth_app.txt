@@ -1,0 +1,211 @@
+/// Provider do model Auth
+
+///
+/// Os Métodos padrões gerados são:
+///   Métodos da API
+///     fecthAll() -> Recupera a lista de Auth.
+///     reload() -> Recarrega a lista de Auth.
+///     detail() -> Recupera os detalhes de um Auth.
+///     post() -> Salva um novo Auth.
+///     put() -> Atualiza os dados de um Auth.
+///     delete() -> Deleta um Auth.
+///
+///   Métodos do Data
+///     fetchLocal() -> Recupera a lista de Auth
+///     reloadLocal() -> Recarrega a lista de Auth
+///     detailLocal() -> Recupera os detalhes de um Auth
+///     saveLocal() -> Salva um novo Auth
+///     updateLocal() -> Atualiza um novo Auth
+///     deleteLocal() -> Deleta um novo Auth
+///     deleteAllLocal() -> Deleta um novo Auth
+
+///
+/// As regras de negócio devem ser implementadas nesse arquivo evitando ao máximo
+/// de serem implementadas nos arquivos das views/pages.
+///
+/// Os métodos de acesso à API devem ser implementados no Service.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:flutter/material.dart';
+
+import 'data.dart';
+import 'model.dart';
+import 'service.dart';
+import '../../utils/config.dart';
+
+class AuthProvider extends ChangeNotifier {
+  final AuthData _authData = AuthData();
+  AuthService _authService;
+  List<AuthModel> authList;
+  AuthModel authModel;
+  List<AuthModel> authLocalList;
+  AuthModel authLocalModel;
+
+  AuthProvider(){
+    _authService = AuthService();
+    authModel = AuthModel();
+    authList = List<AuthModel>();
+  }
+
+  String get profileName {
+    if (authModel != null) {
+      return authModel.profileName;
+    } else {
+      return "";
+    }
+  }
+
+  fetchAll() async {
+    try {
+      authList = await _authService.fetchAll();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  reload() async {
+    try {
+      authList.clear();
+      fetchAll();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  detail() async {
+    try {
+      authModel = await _authService.detail(authModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  post() async {
+    try {
+      authModel = await _authService.post(authModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  put() async {
+    try {
+      authModel = await _authService.put(authModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  delete() async {
+    try {
+      authModel = await _authService.delete(authModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  fetchAllLocal() async {
+    try {
+      authLocalList = List<AuthModel>.of(await _authData.fetchAll());
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
+    }
+  }
+
+  reloadLocal() async {
+    try {
+      authLocalList.clear();
+      fetchAllLocal();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
+    }
+  }
+
+  detailLocal(int id) async {
+    try {
+      authLocalModel = await _authData.get(id);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  saveLocal(AuthModel model) async {
+    try {
+      final bool _result = await _authData.save(model);
+      if (_result) {
+        authLocalModel = model;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
+    }
+  }
+
+  updateLocal(AuthModel model) async {
+    try {
+      final bool _result = await _authData.update(model);
+      if (_result) {
+        authLocalModel = model;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
+    }
+  }
+
+  deleteLocal(int id) async {
+    try {
+      return await _authData.delete(id);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
+    }
+  }
+
+  deleteAllLocal() async {
+    try {
+      return await _authData.deleteAll();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally {
+      notifyListeners();
+    }
+  }
+
+  void _success(String message) async {
+    try {} catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception) async {
+    try {} catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+}

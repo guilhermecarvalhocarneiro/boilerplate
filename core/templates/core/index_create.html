@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div id="content_create_page_app" class="row mb-4 content-page h-100">
+    <div id="submenu_index_page" class="col-3 col-xl-2 h-100">
+        <div class="card menu-vertical-app h-100">
+            <div class="card-header">
+                <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
+            </div>
+            <table class="table table-borderless table-hover table-sm">
+                <tbody>
+                    {% block menu_app %}
+                    {% endblock menu_app %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="form_create_card" class="col-9 col-xl-10 p-5">
+        <div class="card overflow-auto">
+            <div class="card-header m-0 p-0">
+                <div class="row m-0 p-5 w-100">
+                    <div class="col-12 ml-0">
+                        {% block form_app %}{% endblock form_app %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block extra_css %}
+<script>
+    $(document).ready(function () {
+        $('.datetimefield').mask('00/00/0000 00:00');
+    });
+</script>
+{% endblock extra_css %}
+{% block extra_js %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js">
+{% endblock extra_js %}

@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div id="content_delete_page_app" class="row mb-4 content-page h-100">
+    <div id="submenu_index_page" class="col-3 col-xl-2 h-100">
+        <div class="card menu-vertical-app h-100">
+            <div class="card-header">
+                <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
+            </div>
+            <table class="table table-borderless table-hover table-sm">
+                <tbody>
+                    {% block menu_app %}
+                    {% endblock menu_app %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="delete_card" class="col-9 col-xl-10 p-5">
+        <!-- Div da listagem e edição -->
+        <div class="card">
+            <div class="card-header m-0 p-0">
+                {% block titledelete_app %}{% endblock titledelete_app %}
+            </div>
+            <div class="card-body">
+                {% block delete_app %}{% endblock delete_app %}
+            </div>
+            <div class="card-footer">
+                <span class="h6">
+                    Atenção, apagando esse registro todos os itens relacionados também serão deletados.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

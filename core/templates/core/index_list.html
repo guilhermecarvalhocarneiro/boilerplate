@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %} {% block content %}
+
+<div id="content_list_page_app" class="row mb-4 content-page h-100">
+    <div id="submenu_index_page" class="col-3 col-xl-2 h-100">
+        <div class="card menu-vertical-app h-100">
+            <div class="card-header">
+                <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>
+            </div>
+            <table class="table table-borderless table-hover table-sm">
+                <tbody>
+                    {% block menu_app %}
+                    {% endblock menu_app %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="listview_card" class="col-9 col-xl-10 p-5">
+        <!-- Div da listagem e edição -->
+        <div class="card listview">
+            <div class="card-header m-0 p-0">
+                <div class="row m-0 p-0 w-100">
+                    <div class="col-12 my-3">
+                        <!-- Messages block -->
+                            {% if messages %}
+                                <div class="messages">
+                                    {% for message in messages %}
+                                        <div class="alert {% if message.extra_tags %}alert-{{ message.extra_tags }}{% elif message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                            {{ message|safe }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                          <span aria-hidden="true"></span>
+                                        </button>
+                                      </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        <!-- end message block -->
+                    </div>
+                    <div class="col-12 ml-0 mb-3">
+                        <form class="input-icon my-3 my-lg-0 w-100">
+                            <!-- <input type="search" class="form-control header-search" placeholder="Pesquisar" tabindex="1"> -->
+                            <input type="text" id="pesquisa" name="q" value="{{ query_params_q }}" class="form-control header-search" placeholder="Digite o termo para filtrar" aria-label="Digite o termo para filtrar">
+                            <div class="input-icon-addon">
+                                <i class="fe fe-search"></i>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap">
+                    {% block list_app %}
+                    {% endblock list_app %}
+                </table>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-6">
+                        <span class="h6">
+                            {% block size_itens %}{% endblock size_itens %}
+                        </span>
+                    </div>
+                    <div class="col-6 text-right">
+                        <a href="{% block uriadd %}{% endblock uriadd %}" class="btn btn-outline-primary">
+                            <i class="fe fe-plus"></i> Adicionar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

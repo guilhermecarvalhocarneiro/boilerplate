@@ -1,0 +1,79 @@
+/// Página inicial da APP.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'package:provider/provider.dart';
+
+import 'apps/configuracao/model.dart';
+import 'home.page.dart';
+import 'utils/config.dart';
+import 'utils/localization.dart';
+
+$ImportProvider$
+
+String currentLanguage = "";
+
+void main() {
+    runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.transparent
+    ));
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Colors.transparent
+    ));
+    
+    return MultiProvider(
+      providers: [
+        $RegisterProviders$
+      ], child: MaterialAppWidget()  
+    );
+  }
+}
+
+class MaterialAppWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _settingsProvider = Provider.of<SettingsProvider>(context);
+    return MaterialApp(
+      title: Config.app_title,
+      theme: _settingsProvider.lightTheme == true
+         ? CustomTheme.lightTheme
+         : CustomTheme.darkTheme,
+      home: MyHomePage(title: '${Config.app_title}'),
+      supportedLocales: [
+        const Locale('en', 'US'),
+        const Locale('pt', 'BR'),
+      ],
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            currentLanguage = supportedLocale.toString();
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}

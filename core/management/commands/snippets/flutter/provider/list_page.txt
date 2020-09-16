@@ -1,0 +1,161 @@
+/// View/Page para listagem dos registro do $ModelClass$
+/// O método fetchAll é invocado no método initState que ocorre apenas
+/// apenas no primeiro momento de construção da View/Page. 
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'detail.dart';
+import 'create.dart';
+import '../model.dart';
+import '../provider.dart';
+import '../../../../utils/util.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+import '../../../../utils/process.provider.dart';
+
+class $ModelClass$ListPage extends StatefulWidget {
+  @override
+  $ModelClass$ListPageState createState() => $ModelClass$ListPageState();
+}
+
+class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
+  with SingleTickerProviderStateMixin {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  AnimationController _animationController;
+  List<$ModelClass$Model> _$Model$List = List<$ModelClass$Model>();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this);
+    _loadData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String _title = "$ModelClass$";
+    return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
+      body: _buildBody(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {},
+      ),
+    );
+  }
+
+    Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        _buildPage()
+      ],
+    );
+  }
+
+  Widget _buildPage() {
+    return Container(
+      alignment: FractionalOffset.topLeft,
+      child: RefreshIndicator(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _listBuilder(),
+            ],
+          ),
+        ),
+        onRefresh: _refresh,
+      ),
+    );
+  }
+
+  Widget _listBuilder(){
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context);
+    return Expanded(
+      child: ListView.builder(
+      itemCount: _$ModelClassCamelCase$Provider.$ModelClassCamelCase$List.length,
+      itemBuilder: (BuildContext context, int index) {
+        $ModelClass$Model _$Model$ = _$ModelClassCamelCase$Provider.$ModelClassCamelCase$List[index];
+        return GestureDetector(
+          onTap: () {
+            _$ModelClassCamelCase$Provider.$Model$Model = _$Model$;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    $ModelClass$DetailPage(),
+              ),
+            );
+          },
+          child: customCard(
+              context: context, 
+              child: Text(_$Model$.toString()),
+          ),
+        );
+      },
+      ),
+    );
+  }
+
+  Future _refresh() async {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
+    try {
+      await _$ModelClassCamelCase$Provider.reload();
+    } catch (error) {
+
+    }
+  }
+
+  _showMessage(String message, {bool error}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: error == true ? Colors.red : Colors.blue,
+        ),
+      );
+    });
+  }
+
+  _makeToast(String texto, {erro = false, altura = 80.0}) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(''),
+          content: Text(texto),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancelar'),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: Text('Excluir'),
+              onPressed: () {},
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _loadData() async {
+    final _$ModelClassCamelCase$Provider = Provider.of<$ModelClass$Provider>(context, listen: false);
+    await _$ModelClassCamelCase$Provider.fetchAll();
+    debugPrint("Carregando ...");
+  }
+}

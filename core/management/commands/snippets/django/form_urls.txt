@@ -1,0 +1,2 @@
+from nuvols.core.forms import BaseForm
+from .models import $ModelClass$

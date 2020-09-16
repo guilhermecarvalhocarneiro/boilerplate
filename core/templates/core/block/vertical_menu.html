@@ -1,0 +1,17 @@
+<nav id="sidebar_left" class="h-100 mh-100">
+    <ul class="list-unstyled components py-3">
+        {% for app in apps %}
+        <li class="nav-item mb-3">
+            <a href="{% url app.index_url_app %}" class="nav-link">
+                <i class="fe fe-box" title="{{ app.name_app }}"> </i>
+                <span class="ml-3 legend-link">
+                    {{ app.name_app }}
+                </span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="text-center m-3 pb-3 align-bottom">
+        <i id="sidebarCollapse" class="ic fa fa-exchange"></i>
+    </div>
+</nav>

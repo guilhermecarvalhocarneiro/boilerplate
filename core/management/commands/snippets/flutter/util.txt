@@ -1,0 +1,221 @@
+/// Classe contendo método auxiliares comportilhados por
+/// toda a APP
+
+import 'dart:math';
+import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+
+class Process {
+  static Process _instance;
+
+  Process._internal() {
+    _instance = this;
+  }
+
+  factory Process() => _instance ?? Process._internal();
+
+  static bool processing = true;
+  static bool finishedSuccessfully;
+  static bool isDioError;
+  static int statusCode = 0;
+  static String resultMessage;
+  static String friendlyMessage = 'Ocorreu um erro, favor tentar novamente.';
+  static String httpHeader;
+  static String httpData;
+  static String resultException;
+  static String request;
+
+  Process.finishSuccess(String message,
+      {int status, String data, String header}) {
+    finishedSuccessfully = true;
+    resultMessage = message;
+    statusCode = status ?? 0;
+  }
+
+  Process.finishError(String message, String exception,
+      {int status,
+      String data,
+      String header,
+      String request,
+      bool dioError = false}) {
+    finishedSuccessfully = false;
+    resultMessage = message;
+    httpHeader = header;
+    httpData = data;
+    statusCode = status ?? 0;
+    resultException = exception ?? "";
+    request = request ?? "";
+    isDioError = dioError;
+  }
+
+  static bool get isSuccess {
+    if (finishedSuccessfully == null || finishedSuccessfully == false)
+      return false;
+    return true;
+  }
+
+  @override
+  String toString() {
+    String _result =
+        "===\nProcesso:\nStatusCode -> $statusCode\nException -> $resultException\nError -> $resultMessage\nHttp Data -> $httpData\n Http Header -> $httpHeader\n===";
+    return _result;
+  }
+}
+
+class Util {
+  final _imageDefault =
+      "https://cdn.pixabay.com/photo/2017/01/20/00/30/maldives-1993704_960_720.jpg";
+
+  static String getRandomImage() {
+    final _random = Random();
+    final String _item = images[_random.nextInt(images.length)];
+    return _item;
+  }
+
+  /// Retornando a imagem default
+  static String getDefaultImage() => Util()._imageDefault;
+
+  static List<String> images = [
+    'https://cdn.pixabay.com/photo/2017/01/20/00/30/maldives-1993704_960_720.jpg',
+    'https://cdn.pixabay.com/photo/2015/09/09/16/40/ocean-931776_960_720.jpg',
+    'https://cdn.pixabay.com/photo/2018/07/14/15/27/cafe-3537801_960_720.jpg',
+    'https://cdn.pixabay.com/photo/2015/03/26/09/48/chicago-690364_960_720.jpg',
+    'https://cdn.pixabay.com/photo/2014/05/02/23/46/new-york-city-336475_960_720.jpg',
+    'https://cdn.pixabay.com/photo/2013/04/02/13/06/ipanema-beach-99388_960_720.jpg',
+  ];
+
+  /// Método para converter uma String em um Date
+  ///     Params:
+  ///        stringDate = String com a data a ser formatada
+  ///        stringFormat = String com o formato a ser utilizado, padrão "dd/MM/yyyy hh:mm"
+  ///      Return:
+  ///        DateTime 
+  ///
+  static DateTime convertStrToDate(String stringDate,
+      {String stringFormat = "dd/MM/yyyy HH:mm"}) {
+    try {
+      final DateFormat format = new DateFormat(stringFormat);
+      final DateTime data = format.parse(stringDate);
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Método para repartir uma String em Data e Hora
+  ///    Params:
+  ///       dateTime = dynamic com a data a ser repartida
+  ///       returnType String determinando o tipo do retorno
+  ///       dt = List<Data, Hora>
+  ///       d = Data
+  ///       h = Hora 
+  ///    Return:
+  ///        List<String> or String
+  ///
+  static dynamic stringDateTimeSplit(dynamic dateTime,
+      {String returnType = "dt"}) {
+    String _data;
+    String _hora;
+    try {
+      if (dateTime == null) {
+        return null;
+      }
+      if (dateTime.toString().isEmpty){
+        return null;
+      }
+      if (dateTime.toString() is String) {
+        if (dateTime != null && dateTime.toString().isNotEmpty) {
+          final dataSplit = dateTime.toString().split(" ");
+          _data = dataSplit[0];
+          _hora = dataSplit[1];
+        }
+        switch (returnType) {
+          case "d":
+            return _data;
+            break;
+          case "t":
+            return _hora;
+            break;
+          default:
+            return [_data, _hora];
+        }
+      }
+      return null;
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+  }
+
+  /// Método para Converter uma String em um DateTime
+  ///
+  /// Formato da Data 2019-08-23T12:52:46.697982Z
+  /// Formato vindo da API 2019-10-02T10:52:44.823736-03:00
+  ///     return formatDate(DateTime(1989, 2, 1), [yy, '-', MM, '-', d]);
+  ///
+  ///  Params:
+  ///      stringDate = String com a data a ser convertida
+  ///  Return:
+  ///      DateTime
+  ///
+  static DateTime convertDate(String stringDate) {
+    try {
+      if (stringDate == null) return null;
+      if (stringDate.isEmpty) return null;
+      // Verificando se o Formato é 2019-08-23T12:52:46.697982Z
+      if (stringDate.contains("T") && stringDate.contains("-")) {
+        return DateTime.parse(stringDate);
+      }
+      if (stringDate.contains("-") &&
+          !stringDate.contains("/") &&
+          !stringDate.contains(":")) {
+        final DateFormat format = DateFormat("yyyy-MM-dd");
+        return format.parse(stringDate);
+      }
+      // Verificando se o Formato é dd/MM/YYYY HH:mm:ss
+      if (stringDate.contains("/") && stringDate.contains(":")) {
+        // Data e Hora passados
+        final DateFormat format = new DateFormat("dd/MM/yyyy HH:mm");
+        return format.parse(stringDate);
+      }
+      if (stringDate.contains("/") && !stringDate.contains(":")) {
+        // Apenas Data passado
+        final DateFormat format = new DateFormat("dd/MM/yyyy");
+        return format.parse(stringDate);
+        // return DateTime.parse("${stringDate}T14Z");
+      }
+      if (!stringDate.contains("/") && stringDate.contains(":")) {
+        // Apenas Hora passado
+        final DateFormat format = new DateFormat("HH:mm");
+        return format.parse(stringDate);
+        // return DateTime.parse("1000-01-01T$stringDate");
+      }
+    } catch (error) {
+      debugPrint("ERROR no convertDate: $error");
+    }
+  }
+
+  /// Método Estatico para retornar o tamanho da tela do device
+  ///   
+  ///  Parameters:
+  ///      context
+  ///      fator de proporção
+  /// 
+  ///  Return:
+  ///      Double
+  static double getProportionScreenWidth(BuildContext context, double proportion){
+    return MediaQuery.of(context).size.width * proportion;
+  }
+  
+  /// Método Estatico para retornar o tamanho da tela do device
+  ///   
+  ///  Parameters:
+  ///      context
+  ///      fator de proporção
+  /// 
+  ///  Return:
+  ///      Double
+  static double getProportionScreenHeight(BuildContext context, double proportion){
+    return MediaQuery.of(context).size.height * proportion;
+  }
+}

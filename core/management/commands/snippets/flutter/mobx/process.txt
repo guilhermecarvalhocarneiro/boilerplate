@@ -1,0 +1,123 @@
+/// Controller do gerenciamento do processamento assincrono
+///
+/// [Esse arquivo não deve ser alterado] Se necessário deve ser modificado
+/// o manage do Django que gera esse arquivo
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:mobx/mobx.dart';
+
+part 'process.controller.g.dart';
+
+class ProcessController = _ProcessControllerBase with _$ProcessController;
+
+abstract class _ProcessControllerBase with Store {
+
+  /// Área para sobrescrever métodos da classe
+  // Sobrescrevendo o toString
+  @override
+  String toString() {
+    return "ErrorController:\nSucesso -> ${this.success.toString()}\nStatusCode -> ${this.statusCode.toString()}\nMessage -> ${this.message.toString()}\nData -> ${this.httpData.toString()}\nHeader -> ${this.httpHeader}\nError -> ${this.error}\nExcept ->${this.exception}";
+  }
+
+  // Declarando os atributos do controller
+  // Atributo para determinar quando está sendo processo alguma tarefa assíncrona.
+  @observable
+  bool processing = true;
+
+  // Atributo para determinar se o processo foi concluído com sucesso ou não
+  @observable
+  bool success;
+
+  // Atributo com o código de retorno da requisição HTTP
+  @observable
+  int statusCode = 0;
+
+  // Atributo com a mensagem de retorno
+  @observable
+  String message = '';
+
+  // Atributo com a mensagem de retorno para o usuário
+  @observable
+  String friendlyMessage = 'Ocorreu um erro, favor tentar novamente.';
+  
+  // Atributo com o head da requisição HTTP
+  @observable
+  String httpHeader = '';
+  
+  // Atributo com o data da requisição HTTP
+  @observable
+  String httpData = '';
+
+  // Atributo com um erro genérico
+  @observable
+  String error = '';
+  
+  // Atributo com um exception genérico.
+  @observable
+  String exception = '';
+
+  // Declarando a Action para informar que o processamento iniciou
+  @action
+  beginProcessing() async => this.processing = true;
+
+  // Declarando a Action para informar que o processamento parou
+  @action
+  endProcessing() async => this.processing = false;
+
+  // Action para retorno com sucesso
+  @action
+  withSuccess({
+    int statusCode,
+    String message,
+    String httpHeader,
+    String httpData,
+  }) {
+    try {
+      this.processing = false;
+      this.success = true;
+      this.statusCode = statusCode;
+      this.message = message;
+      this.httpHeader = httpHeader;
+      this.httpData = httpData;
+      this.error = null;
+      this.exception = null;
+    } catch (e) {}
+  }
+
+  // Action para retorno com erro
+  @action
+  withError({
+    int statusCode,
+    String message,
+    String httpHeader,
+    String httpData,
+    String error,
+    String exception,
+  }) {
+    try {
+      this.processing = false;
+      this.success = false;
+      this.statusCode = statusCode;
+      this.message = message;
+      this.httpHeader = httpHeader;
+      this.httpData = httpData;
+      this.error = error;
+      this.exception = exception;
+    } catch (e) {}
+  }
+
+  clear(){
+    this.processing = null;
+    this.success = null;
+    this.statusCode = 0;
+    this.message = '';
+    this.httpHeader = '';
+    this.httpData = '';
+    this.error = '';
+    this.exception = '';
+  }
+}

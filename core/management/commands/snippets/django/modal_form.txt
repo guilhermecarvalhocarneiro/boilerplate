@@ -1,0 +1,59 @@
+{% if form.$field_name$.field.queryset.model|has_add_permission:request %}
+{# MODAL $ModelName$ #}
+<div class="modal fade" id="form$ModelName$Modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Adicionar $ModelName$</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="form-$model_name$">
+                     {% csrf_token %} 
+                    {% for hidden in form_$model_name$.hidden_fields %} {{ hidden }} {% endfor %}
+                    {% for field in form_$model_name$.visible_fields%}
+                    <div class="form-group">
+                        {{ field.label_tag }} {{ field }} {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %} {% if field.field.required %}
+                        <div class="invalid-feedback">
+                            Campo Obrigatorio.
+                        </div>
+                        {% endif %} {% if field.errors %} {{ field.errors }} {% endif %}
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-gravar-$model_name$">Gravar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#btn-gravar-$model_name$").on("click", function (event) {
+        event.preventDefault();
+        var url = window.location.href;
+        $.ajax({
+            url: '/core/api/$app_name$/$model_name$/',
+            method: 'POST',
+            data: $("#form-$model_name$").serialize(),
+            dataType: 'json',
+            success: function (data){
+                // Adicionando o item retornado no select.
+                $("#id_$field_name$").load( url + " #id_$field_name$ option" );
+                // Ocultando o form.
+                $("#form$ModelName$Modal").modal('hide');
+                //Limpar o form do modal
+                $('#form-$model_name$').trigger("reset");
+            },
+            error: function(error){
+                console.log(error);
+            }
+        })
+    });
+</script>
+{% endif %}

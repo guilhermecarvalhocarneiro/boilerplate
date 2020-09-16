@@ -1,0 +1,66 @@
+import 'package:flutter/foundation.dart';
+
+/// Provider do gerenciamento do processamento assincrono
+///
+/// [Esse arquivo não deve ser alterado] Se necessário deve ser modificado
+/// o manage do Django que gera esse arquivo
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+class ProcessProvider extends ChangeNotifier {
+  bool processing = true;
+  bool success;
+  int statusCode = 0;
+  String message = '';
+  String friendlyMessage = 'Ocorreu um erro, favor tentar novamente.';
+  String httpHeader = '';
+  String httpData = '';
+  String error = '';
+  String exception = '';
+
+  void beginProcessing() async {
+    processing = true;
+    notifyListeners();
+  }
+
+  void endProcessing() async {
+    processing = false;
+    notifyListeners();
+  }
+
+  void withSuccess(
+      {int statusCode, String message, String httpHeader, String httpData}) {
+    processing = false;
+    success = true;
+    error = null;
+    exception = null;
+    notifyListeners();
+  }
+
+  void withError(
+      {int statusCode,
+      String message,
+      String httpHeader,
+      String httpData,
+      String error,
+      String exception}) {
+    processing = false;
+    success = false;
+    notifyListeners();
+  }
+
+  void clear() {
+    processing = null;
+    success = null;
+    statusCode = 0;
+    message = '';
+    httpHeader = '';
+    httpData = '';
+    error = '';
+    exception = '';
+    notifyListeners();
+  }
+}

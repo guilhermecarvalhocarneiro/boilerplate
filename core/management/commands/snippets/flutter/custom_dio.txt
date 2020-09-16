@@ -1,0 +1,132 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:dio/native_imp.dart';
+
+import 'config.dart';
+
+class CustomDio extends DioForNative {
+  String _url;
+
+  CustomDio(String url, [BaseOptions options]) : super(options) {
+    // Adicionando os interceptors
+    interceptors.add(CustomDioInterceptor());
+    _url = "${Config.uri}$url";
+  }
+
+  Map<String, String> makeHeadersAuthentication(
+      {String token, String contentType = "application/json; charset=utf-8"}) {
+    Map<String, String> headersMap;
+    try {
+      if (token != null && token.isNotEmpty) {
+        headersMap = {
+          'Content-Type': contentType,
+          'Authorization': token,
+        };
+      } else {
+        headersMap = {
+          'Content-Type': contentType,
+          'Authorization': Config.DRFToken
+        };
+      }
+    } catch (e) {
+      debugPrint("Erro ao criar o cabeçalho da requisição ${e.toString()}");
+    }
+    options.headers = headersMap;
+    return headersMap;
+  }
+
+  Future<dynamic> getHttp({String uri}) async {
+    _url = uri ?? _url;
+    try {
+      Response _response = await this.get(_url);
+      if (_response.statusCode == 200) {
+        return _response.data;
+      }
+      return null;
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Get no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
+  }
+
+  Future<dynamic> postHttp(data, {String uri}) async {
+    _url = uri ?? _url;
+    try {
+      Response _response = await this.post(_url, data: data);
+      if (_response.statusCode == 201) {
+        return _response.data;
+      }
+      return null;
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Post no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
+  }
+
+  Future<dynamic> putHttp(data, String id, {String uri}) async {
+    _url = uri ?? _url;
+    try {
+      Response _response = await this.put(_url, data: data);
+      if (_response.statusCode == 200) {
+        return _response.data;
+      }
+      return null;
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Put no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
+  }
+
+  Future<dynamic> patchHttp(data, {String uri}) async {
+    _url = uri ?? _url;
+    try {
+      Response _response = await this.put(_url, data: data);
+      if (_response.statusCode == 200) {
+        return _response.data;
+      }
+      return null;
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Patch no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
+  }
+
+  Future<dynamic> deleteHttp(data, String id, {String uri}) async {
+    _url = uri ?? _url;
+    try {
+      Response _response = await this.delete(_url, data: data);
+      if (_response.statusCode == 200) {
+        return _response.data;
+      }
+      return null;
+    } on DioError catch (error) {
+      DebugPrint.error("Error ao executar o Delete no DIO: $error " +
+          "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    }
+  }
+}
+
+class CustomDioInterceptor extends InterceptorsWrapper {
+  @override
+  Future onRequest(RequestOptions options) {
+    options.connectTimeout = 50000;
+    options.receiveTimeout = 50000;
+    return super.onRequest(options);
+  }
+
+  @override
+  Future onResponse(Response response) {
+    return super.onResponse(response);
+  }
+
+  @override
+  Future onError(DioError err) {
+    return super.onError(err);
+  }
+}

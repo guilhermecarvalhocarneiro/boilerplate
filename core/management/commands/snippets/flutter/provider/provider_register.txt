@@ -1,0 +1,4 @@
+MultiProvider(
+providers: [
+    ChangeNotifierProvider(builder: (_) => DataProvider()),
+],

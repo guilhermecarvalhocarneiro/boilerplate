@@ -1,0 +1,6 @@
+
+class $ModelName$Serializer(ModelSerializer):
+    """ Class para gerenciar o serializer do model $ModelClass$ """
+    class Meta:
+        model = $ModelName$
+        fields = '__all__'

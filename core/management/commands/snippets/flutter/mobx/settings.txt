@@ -1,0 +1,41 @@
+/// Controller do settings da APP
+///
+///    O CÓDIGO DO ARQUIVO controller.g.dart NUNCA DEVE SER ALTERADO MANUALMENTE.
+///    Quando for alterado algo no arquivo controller.dart deve ser executado o comando:
+///      flutter pub run build_runner build
+///
+/// Após a execução do comando acima o arquivo controller.g.dart terá sido atualizado
+/// com as novas features.
+///
+/// Os Métodos padrões gerados são:
+///   Métodos da API
+///     fecthAll() -> Recupera a lista de $ModelClass$.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:mobx/mobx.dart';
+
+part 'controller.g.dart';
+
+class SettingsController = _SettingsControllerBase with _$SettingsController;
+
+abstract class _SettingsControllerBase with Store {
+  // Declarando o Observável de controle do Thema da App
+  @observable
+  bool lightTheme;
+
+  // Declarando a Action para alterar o Theme da App.
+  // para configurar o thema como dark basta passar
+  // false no contrutor.
+  @action
+  setTheme(bool lightTheme) {
+    try {
+      this.lightTheme = lightTheme;
+    } catch (erro) {
+      this.lightTheme = true;
+    }
+  }
+}

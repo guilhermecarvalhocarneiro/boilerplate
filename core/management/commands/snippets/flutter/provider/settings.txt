@@ -1,0 +1,34 @@
+import 'package:flutter/foundation.dart';
+
+/// Controller do settings da APP
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+class SettingsProvider extends ChangeNotifier{
+  bool lightTheme;
+
+  bool get isLightTheme => lightTheme;
+
+  void setLightTheme() {
+    try {
+      lightTheme = true;
+    } catch (e) {
+      debugPrint(e.toString());
+      lightTheme = true;
+    }
+    notifyListeners();
+  }
+  
+  void setDarkTheme() {
+    try {
+      lightTheme = false;
+    } catch (e) {
+      debugPrint(e.toString());
+      lightTheme = true;
+    }
+    notifyListeners();
+  }
+}

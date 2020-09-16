@@ -1,0 +1,132 @@
+import 'package:flutter/cupertino.dart';
+/// Local Data do model Auth
+///
+/// Os Métodos padrões gerados são:
+///     fecthAll() -> Recupera a lista de Auth.
+///     save() -> Salva os dados de uma instância do Auth.
+///     detail() -> Recupera os detalhes de Auth.
+///     update() -> Atualiza os dados de uma instância do Auth.
+///     delete() -> Deleta um registro.
+///     deleteAll() -> Deleta todos os registros.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sembast/sembast.dart' as smbt;
+import 'package:sembast/sembast_io.dart' as smbt_io;
+
+import 'model.dart';
+
+class AuthData {
+  final AuthModel _authModel = AuthModel();
+
+  static final AuthData _instance = AuthData.internal();
+
+  factory AuthData() => _instance;
+
+  AuthData.internal();
+
+  smbt.Database _db;
+
+  final String _storeName = "AuthStoreDB";
+
+  Future<smbt.Database> initDb() async {
+    try {
+      // get the application documents directory
+      final dir = await getApplicationDocumentsDirectory();
+      // make sure it exists
+      await dir.create(recursive: true);
+      // build the database path
+      final dbPath = join(dir.path, 'Help.db');
+      // open the database
+      return await smbt_io.databaseFactoryIo.openDatabase(dbPath);
+    } catch (error, exception) {
+      debugPrint(
+          "Erro no método initDB -> error: $error, message: $exception");
+    }
+    return null;
+  }
+
+  Future<List<AuthModel>> fetchAll() async {
+    try {
+      _db = await initDb();
+      final _store = smbt.intMapStoreFactory.store(_storeName);
+      final _data = await _store.find(_db);
+      return _data.map((snapshot) {
+        final _result = AuthModel.fromMap(snapshot.value);
+      }).toList();
+    } catch (e) {
+      return null;
+    } finally {
+      _db.close();
+    }
+  }
+
+  Future<AuthModel> get(int id) async {
+    try {
+      _db = await initDb();
+      final _store = smbt.intMapStoreFactory.store(_storeName);
+      final _data = await _store.findFirst(_db);
+      return AuthModel.fromMap(_data.value);
+    } catch (e) {
+      return null;
+    } finally {
+      _db.close();
+    }
+  }
+
+  Future<bool> save(AuthModel Auth) async {
+    try {
+      _db = await initDb();
+      final _store = smbt.intMapStoreFactory.store(_storeName);
+      await _store.add(_db, Auth.toMap());
+      return true;
+    } catch (error) {
+      return false;
+    } finally {
+      _db.close();
+    }
+  }
+
+  Future<bool> deleteAll() async {
+    try {
+      _db = await initDb();
+      final _store = smbt.intMapStoreFactory.store(_storeName);
+      await _store.delete(_db);
+      return true;
+    } catch (error) {
+      return false;
+    } finally {
+      _db.close();
+    }
+  }
+
+  Future<bool> delete(int id) async {
+    try {
+      _db = await initDb();
+      final _store = smbt.intMapStoreFactory.store(_storeName);
+      await _store.delete(_db);
+      return true;
+    } catch (error) {
+      return false;
+    } finally {
+      _db.close();
+    }
+  }
+
+  Future<bool> update(AuthModel Auth) async {
+    try {
+      _db = await initDb();
+      final _store = smbt.intMapStoreFactory.store(_storeName);
+      return true;
+    } catch (error) {
+      return false;
+    } finally {
+      _db.close();
+    }
+  }
+}

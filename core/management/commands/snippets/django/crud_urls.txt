@@ -1,0 +1,3 @@
+from nuvols.core.views import BaseListView, BaseDeleteView, BaseDetailView, BaseUpdateView, BaseCreateView, BaseTemplateView
+from .models import $ModelClass$
+from .forms import $ModelClass$Form

@@ -1,0 +1,147 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="page">
+    <div class="page-main">
+      
+      
+      <div class="my-3 my-md-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card card-profile">
+                <div class="card-header" style="background-image: url(demo/photos/eberhard-grossgasteiger-311213-500.jpg);"></div>
+                <div class="card-body text-center">
+                  <img class="card-profile-img" src="demo/faces/male/16.jpg">
+                  <h3 class="mb-3">{{ user.first_name|title }}</h3>
+                  <p class="mb-4">
+                    Big belly rude boy, million dollar hustler. Unemployed.
+                  </p>
+                  <button class="btn btn-outline-primary btn-sm">
+                    <span class="fa fa-twitter"></span> Follow
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <form class="card" id="update-form" name="update-form" method="POST" action="{% url 'core:profile-update' %}">
+                {% csrf_token %}
+                <div class="card-body">
+                  <h3 class="card-title">Editar Perfil</h3>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="form-label">Login</label>
+                        <input type="text" id="login" name="login" class="form-control" disabled="" placeholder="Login" value="{{ user.username }}">
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Nome</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Nome" value="{{ user.first_name }}">
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Sobrenome</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Sobrenome" value="{{ user.last_name }}">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Informe seu e-mail" value="{{ user.email }}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer text-right">
+                  <button type="submit" class="btn btn-primary">Atualizar Perfil</button>
+                </div>
+              </form>
+            </div>
+            
+          </div>
+          <div class="row">
+              <div class="col-lg-8 offset-lg-4">
+                  <form class="card needs-validation" novalidate action="{% url 'core:password-update' %}" method="post">
+                    {% csrf_token %}
+                    <div class="card-body">
+                      <h3 class="card-title">Editar Senha</h3>
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label class="form-label">Nova Senha</label>
+                            <input class="form-control" required type="password" name="new-password" id="new-password">
+                            <div class="invalid-feedback">
+                              Campo obrigatório
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Confirmar Nova Senha</label>
+                                <input class="form-control" required type="password" name="confirm-password" id="confirm-password">
+                                <div class="invalid-feedback">
+                                  Campo obrigatório
+                                </div>
+                              </div>
+                        </div>
+                        <p id="password-error" class="p-0 m-0 pl-4 text-danger d-none">As senhas devem ser iguais</p>
+                      </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <button id="btn-change-password" type="submit" class="btn btn-primary">Atualizar Senha</button>
+                      </div>
+                  </form>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+      // Function validate new password
+      $("#new-password").change(function(){
+        if($(this).val() !== $("#new-password").val()){
+          $("#password-error").removeClass("d-none");
+          $("#btn-change-password").addClass("disabled");
+        }else{
+          $("#password-error").addClass("d-none");
+          $("#btn-change-password").removeClass("disabled");
+        };
+      });
+      $("#confirm-password").change(function(){
+        if($(this).val() !== $("#new-password").val()){
+          $("#password-error").removeClass("d-none");
+          $("#btn-change-password").addClass("disabled");
+        }else{
+          $("#password-error").addClass("d-none");
+          $("#btn-change-password").removeClass("disabled");
+        };
+      });
+    }, false);    
+  })();
+  </script>
+{% endblock extra_js %}
+  

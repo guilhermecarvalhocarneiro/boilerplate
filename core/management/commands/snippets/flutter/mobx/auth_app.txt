@@ -1,0 +1,280 @@
+/// Controller do model Auth
+/// 
+///    O CÓDIGO DO ARQUIVO controller.g.dart NUNCA DEVE SER ALTERADO MANUALMENTE.
+///    Quando for alterado algo no arquivo controller.dart deve ser executado o comando:
+///      flutter pub run build_runner build
+///
+/// Após a execução do comando acima o arquivo controller.g.dart terá sido atualizado 
+/// com as novas features.
+///
+/// Os Métodos padrões gerados são:
+///   Métodos da API
+///     fecthAll() -> Recupera a lista de Auth.
+///     reload() -> Recarrega a lista de Auth.
+///     detail() -> Recupera os detalhes de um Auth.
+///     post() -> Salva um novo Auth.
+///     put() -> Atualiza os dados de um Auth.
+///     delete() -> Deleta um Auth.
+///
+///   Métodos do Data
+///     fetchLocal() -> Recupera a lista de Auth
+///     reloadLocal() -> Recarrega a lista de Auth
+///     detailLocal() -> Recupera os detalhes de um Auth
+///     saveLocal() -> Salva um novo Auth
+///     updateLocal() -> Atualiza um novo Auth
+///     deleteLocal() -> Deleta um novo Auth
+///     deleteAllLocal() -> Deleta um novo Auth
+
+///
+/// As regras de negócio devem ser implementadas nesse arquivo evitando ao máximo
+/// de serem implementadas nos arquivos das views/pages.
+///
+/// Todos os métodos de acesso à API devem ser implementados no Service.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'data.dart';
+import 'model.dart';
+import 'service.dart';
+import '../../utils/config.dart';
+import '../../utils/process.controller.dart';
+
+import 'package:mobx/mobx.dart';
+import 'package:get_it/get_it.dart';
+
+part 'controller.g.dart';
+
+class AuthController = _AuthControllerBase with _$AuthController;
+
+
+/// Declarando a classe abstrata do Auth com o Mixin de Store
+abstract class _AuthControllerBase with Store {
+
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando o AuthData responsável pelo acesso ao SQLite.
+  AuthData _authData = AuthData();
+
+  // Instanciando o AuthService responsável pelo acesso à API.
+  AuthService _authService = AuthService();
+
+  // Declarando os elementos observáveis padrões do AuthController.
+  @observable
+  ObservableList<AuthModel> authList;
+  
+  @observable
+  AuthModel authModel;
+
+  /// Declarando os elementos observáveis do Db do AuthController.
+  @observable
+  ObservableList<AuthModel> authLocalList;
+
+  @observable
+  AuthModel authLocalModel;
+
+  /// Método para recuperar o profileName do usuário logado
+  String get profileName{
+    if(this.authModel != null){
+      return this.authModel.profileName;
+    }else{
+      return "";
+    }
+  }
+
+  /// Declarando os actions padrões do AuthController.
+  
+  /// Action responsável pelo retorno da lista de elementos da API.
+  @action
+  fetchAll() async{
+    try{
+     _processController.processing = true;
+      // Recuperando a lista de Auth da API.
+      authList = ObservableList<AuthModel>.of(await _authService.fetchAll());
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por recarregar os dados da API.
+  @action
+  reload() async{
+    try{
+      _processController.processing = true;
+      // Limpando os dados contidos na lista de Auth
+      authList.clear();
+      // Invocando o método que carrega os dados da API.
+      this.fetchAll();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por detalhar um Auth
+  @action
+  detail() async{
+    try{
+      _processController.processing = true;
+      // Recuperando o detalhe de um determinado Auth da API. 
+      authModel = await _authService.detail(authModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por salvar os dados de uma instância do Auth na API.
+  @action
+  post() async{
+    try{
+      _processController.processing = true;
+      // Recuperando o detalhe de um determinado Auth da API. 
+      authModel = await _authService.post(authModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por atualizar os dados de uma instância do Auth na API.
+  @action
+  put() async{
+    try{
+      _processController.processing = true;
+      // Recuperando o detalhe de um determinado Auth da API. 
+      authModel = await _authService.put(authModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por excluir os dados de uma instância do Auth na API.
+  @action
+  delete() async{
+    try{
+      _processController.processing = true;
+      // Recuperando o detalhe de um determinado Auth da API. 
+      authModel = await _authService.delete(authModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  ///
+  /// [Área dos métodos da persistência no device]
+  ///
+
+  /// Action para recuperar todos os registros do Db
+  @action
+  fetchAllLocal() async{
+    try{
+      _processController.processing = true;
+      authLocalList = ObservableList<AuthModel>.of(await _authData.fetchAll());
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+  
+  /// Action para atualizar a lista de Auth do Db
+  @action
+  reloadLocal() async{
+    try{
+      authLocalList.clear();
+      this.fetchAllLocal();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Action para detalhar um Auth do Db
+  @action
+  detailLocal(int id) async{
+    try{
+      authLocalModel = await _authData.get(id);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action para detalhar um Auth do Db
+  @action
+  saveLocal(AuthModel model) async{
+    try{
+      bool _result = await _authData.save(model);
+      if(_result){
+        authLocalModel = model;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Action para atualizar um Auth do Db
+  @action
+  updateLocal(AuthModel model) async{
+    try{
+      bool _result = await _authData.update(model);
+      if(_result){
+        authLocalModel = model;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Action para deletar um Auth do Db
+  @action
+  deleteLocal(int id) async{
+    try{
+      return await _authData.delete(id);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Action para deletar todos os Auths do Db
+  @action
+  deleteAllLocal() async{
+    try{
+      return await _authData.deleteAll();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Métodos para tratar o retorno do processamento
+  void _success(String message) async {
+    try {
+      _processController.withSuccess(message: message);
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception) async {
+    try {
+      _processController.withError(
+        error: error,
+        exception: exception,
+      );
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
+  }
+
+}

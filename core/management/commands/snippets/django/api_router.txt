@@ -1,0 +1,5 @@
+
+
+router = routers.DefaultRouter()
+# URL para a API $ModelName$
+router.register(r'$model_name$', $ModelName$ViewAPI, '$model_name$-api')

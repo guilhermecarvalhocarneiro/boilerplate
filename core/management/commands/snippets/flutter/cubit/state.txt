@@ -1,0 +1,34 @@
+part of 'cubit.dart';
+
+abstract class $ModelClass$State extends Equatable {
+  const $ModelClass$State();
+}
+
+class $ModelClass$Initial extends $ModelClass$State {
+  @override
+  List<Object> get props => [];
+}
+
+class $ModelClass$ProcessState extends $ModelClass$State {
+  @override
+  List<Object> get props => [];
+}
+
+class $ModelClass$SuccessState extends $ModelClass$State {
+  final String successMessage;
+  $ModelClass$SuccessState({
+    this.successMessage,
+  });
+
+  @override
+  List<Object> get props => [];
+}
+
+class $ModelClass$ErrorState extends $ModelClass$State {
+  final String error;
+
+  $ModelClass$ErrorState(this.error);
+
+  @override
+  List<Object> get props => [error];
+}

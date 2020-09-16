@@ -1,0 +1,150 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="page">
+    <div class="page-single">
+      <div class="container">
+        <div class="row">
+          <div class="col col-login mx-auto">
+            <div class="text-center mb-6">
+              <img src="./demo/brand/tabler.svg" class="h-6" alt="">
+            </div>
+            <form class="card needs-validation" novalidate method="post">
+              {% csrf_token %}
+              <div class="card-body p-6">
+                <div class="card-title">Login</div>
+                <div class="form-group">
+                  <label class="form-label">Usuário</label>
+                  <input name="{{ form.username.html_name }}"
+                          id="{{ form.username.id_for_label }}"
+                          value="{% if form.username.value is not None %}{{ form.username.value }}{% endif %}"
+                          required
+                          type="text" class="form-control" placeholder="Digite seu login">
+                  {% if form.username.errors %}
+                      {{ form.username.errors }}
+                  {% endif %}
+                  {% if form.username.help_text %}
+                      <small class="form-text text-muted">{{ form.username.help_text|safe }}</small>
+                  {% endif %}
+
+                  {% if form.username.field.required %}
+                      <div class="invalid-feedback">
+                          {{ form.username.field.error_messages.required }}
+                      </div>
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  <label class="form-label">
+                    Senha
+                  </label>
+                  <input name="{{ form.password.html_name }}"
+                          id="{{ form.password.id_for_label }}"
+                      {% if form.password.field.required %} required  {% endif %}
+                          type="password" class="form-control" placeholder="Digite sua senha">
+                  {% if form.password.errors %}
+                      {{ form.password.errors }}
+                  {% endif %}
+
+                  {% if form.password.help_text %}
+                      <small class="form-text text-muted">{{ form.password.help_text|safe }}</small>
+                  {% endif %}
+
+                  {% if form.password.field.required %}
+                      <div class="invalid-feedback">
+                          {{ form.password.field.error_messages.required }}
+                      </div>
+                  {% endif %}
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="form-footer">
+                  <button type="submit" class="btn btn-primary btn-block">Acessar</button>
+                  <!-- Button trigger modal -->
+                  <small id="emailHelp" class="form-text text-muted mt-3">Em caso de esquecimento da senha clique no botão
+                      abaixo.
+                  </small>
+                  <button type="button" class="btn btn-link btn-lg float-right" data-toggle="modal" data-target="#reset-password">
+                    Esqueci a senha
+                  </button>
+                  
+                  <!-- Modal -->
+                  <div class="modal fade" id="reset-password" tabindex="-1" role="dialog" aria-labelledby="reset-password-title" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title" id="reset-password-title">Gerar nova senha</h4>
+                        </div>
+                        <div class="modal-body">
+                          <form class="needs-validation" method="get" novalidate>
+                              <div class="form-group">
+                                  <label for="resert-password-username">Usuário</label>
+                                  <input type="text" class="form-control" name="resert-password-username" id="resert-password-username" aria-describedby="helpId-resert-password-username" placeholder="Informe seu usuário">
+                                  <small id="helpId-resert-password-username" class="form-text text-muted">Informe o seu login/username</small>
+                                </div>
+                                <div class="form-group">
+                                  <label for="reset-password-email">Email</label>
+                                  <input type="text" class="form-control" name="reset-password-email" id="reset-password-email" aria-describedby="helpId-reset-password-email" placeholder="Informe seu email">
+                                  <small id="helpId-reset-password-email" class="form-text text-muted">Informe seu email</small>
+                                </div>
+                                <a href="#" id="btn-reset-password" class="btn btn-primary float-right">Gerar nova senha.</a>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block extra_js %}
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);    
+    // Reset Password
+    $('#btn-reset-password').click(function(){
+      var username = $('#resert-password-username').val();
+      var email = $('#reset-password-email').val();
+      $.ajax({
+          url: '/core/profile/reset/password/',
+          method: 'GET',
+          data: {username: username, email: email},
+          dataType: 'json',
+          success: function (data){
+              console.table(data);
+          },
+          error: function(error){
+              console.log(error);
+          }
+      });
+    });
+  })();
+  </script>
+{% endblock extra_js %}

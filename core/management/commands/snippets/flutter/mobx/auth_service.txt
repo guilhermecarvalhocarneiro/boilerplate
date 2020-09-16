@@ -1,0 +1,131 @@
+/// Service do model Auth
+/// 
+/// Os Métodos padrões gerados são:
+///     fecthAll() -> Recupera a lista de Auth da API.
+///     detail()   -> Recupera os detalhes de Auth da API.
+///     post()     -> Salva os dados de uma instância do Auth na API.
+///     put()      -> Atualiza os dados de uma instância do Auth na API.
+///     delete()   -> Deleta os dados de uma instância do Auth na API.
+///
+/// Todos os métodos de acesso à API devem ser implementados no nessa classe.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:get_it/get_it.dart';
+
+import 'model.dart';
+import '../../utils/config.dart';
+import '../../utils/custom_dio.dart';
+import '../../utils/process.controller.dart';
+
+class AuthService {
+  // Instanciando o ProcessController
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando a classe AuthModel
+  AuthModel auth = AuthModel();
+
+  /// Método para retornar todos os Auth da API
+  Future<List<AuthModel>> fetchAll() async {
+    List<AuthModel> _itens = List<AuthModel>();
+    String _url = "";
+
+    try {
+      CustomDio _dio = CustomDio(_url);
+      var data = await _dio.getHttp();
+      if (data != null) {
+        for (var item in data){
+          _itens.add(AuthModel.fromMap(item));
+        }
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return _itens;
+  }
+  
+  /// Método para detalhar um Auth da API
+  Future<AuthModel> detail(AuthModel auth) async {
+    String _url = "";
+    try {
+      CustomDio _dio = CustomDio(_url);
+      var data = await _dio.getHttp();
+      if (data != null) {
+        auth = AuthModel.fromMap(data);
+      }
+    } catch (error, exception) {
+        _error(error.toString(), exception.toString());
+    }
+    return auth;
+  }
+
+  /// Método para atualizar um Auth da API
+  Future<AuthModel> put(AuthModel auth) async {
+    String _url = "";
+    
+    try {
+      CustomDio _dio = CustomDio(_url);
+      var data = await _dio.putHttp(auth.toMap(), auth.id.toString());
+      if (data != null) {
+        auth = AuthModel.fromMap(data);
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return auth;
+  }
+  
+  /// Método para adicionar os Auth da API
+  Future<AuthModel> post(AuthModel auth) async {
+    String _url = "";
+
+    try {
+      CustomDio _dio = CustomDio(_url);
+      var data = await _dio.postHttp(auth.toMap());
+      if (data != null) {
+        auth = AuthModel.fromMap(data);
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return auth;
+  }
+
+  /// Método para exclui os Auth da API
+  Future<AuthModel> delete(AuthModel auth) async {
+    String _url = "";
+    try {
+      CustomDio _dio = CustomDio(_url);
+      var data = await _dio.deleteHttp(auth.toMap(), auth.id.toString());
+      if (data != null) {
+        auth = AuthModel.fromMap(data);
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+    return auth;
+  }
+
+  /// Métodos para tratar o retorno do processamento
+  void _success(String message) async {
+    try {
+      _processController.withSuccess(message: message);
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception) async {
+    try {
+      _processController.withError(
+        error: error,
+        exception: exception,
+      );
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
+  }
+}

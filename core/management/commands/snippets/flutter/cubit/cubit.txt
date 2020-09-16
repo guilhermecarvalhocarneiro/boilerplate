@@ -1,0 +1,137 @@
+/// Os Métodos padrões gerados são:
+///   Métodos da API
+///     fecth() -> Recupera a lista de $ModelClass$.
+///     reload() -> Recarrega a lista de $ModelClass$.
+///     detail() -> Recupera os detalhes de um $ModelClass$.
+///     post() -> Salva um novo $ModelClass$.
+///     put() -> Atualiza os dados de um $ModelClass$.
+///     delete() -> Deleta um $ModelClass$.
+
+///   Métodos do Data
+///     fetchLocal() -> Recupera a lista de $ModelClass$
+///     reloadLocal() -> Recarrega a lista de $ModelClass$
+///     detailLocal() -> Recupera os detalhes de um $ModelClass$
+///     saveLocal() -> Salva um novo $ModelClass$
+///     updateLocal() -> Atualiza um novo $ModelClass$
+///     deleteLocal() -> Deleta um novo $ModelClass$
+///     deleteAllLocal() -> Deleta um novo $ModelClass$
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'model.dart';
+import 'service.dart';
+import 'data.dart';
+
+part 'state.dart';
+
+class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
+  $ModelClass$Service _service;
+  $ModelClass$Data _data;
+  bool _loading = false;
+  $ModelClass$Model $ModelClassCamelCase$Model;
+  List<$ModelClass$Model> $ModelClassCamelCase$List;
+
+  $ModelClass$Cubit() : super($ModelClass$Initial()) {
+    _service = $ModelClass$Service();
+  }
+
+  bool get loading => _loading;
+  void _isLoading(){
+    _loading = ! _loading;
+  }
+
+  Future<void> fetch() async {
+    try {
+      emit($ModelClass$ProcessState());
+      _isLoading();
+      $ModelClassCamelCase$List = await _service.fetch();
+      emit($ModelClass$SuccessState(
+        successMessage: "Dados carregados com sucesso."),
+      );
+    } catch (e) {
+      emit($ModelClass$ErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> reload() async {
+    try {
+      emit($ModelClass$ProcessState());
+      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
+      _isLoading();
+      emit($ModelClass$SuccessState(
+        successMessage: "Dados carregados com sucesso."),
+      );
+    } catch (e) {
+      emit($ModelClass$ErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> post($ModelClass$Model $ModelClassCamelCase$) async {
+    try {
+      emit($ModelClass$ProcessState());
+      _isLoading();
+       $ModelClassCamelCase$Model = await _service.post($ModelClassCamelCase$);
+      emit($ModelClass$SuccessState(
+        successMessage: "Dados salvos com sucesso."),
+      );
+    } catch (e) {
+      emit($ModelClass$ErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> put($ModelClass$Model $ModelClassCamelCase$) async {
+    try {
+      emit($ModelClass$ProcessState());
+      _isLoading();
+      $ModelClassCamelCase$Model = await _service.post($ModelClassCamelCase$);
+      emit($ModelClass$SuccessState(
+        successMessage: "Dado atualizado com sucesso."),
+      );
+    } catch (e) {
+      emit($ModelClass$ErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> patch($ModelClass$Model $ModelClassCamelCase$) async {
+    try {
+      emit($ModelClass$ProcessState());
+      _isLoading();
+      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
+      emit($ModelClass$SuccessState(
+        successMessage: "Dado atualizado com sucesso."),
+      );
+    } catch (e) {
+      emit($ModelClass$ErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> delete($ModelClass$Model $ModelClassCamelCase$) async {
+    try {
+      emit($ModelClass$ProcessState());
+      _isLoading();
+      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
+      emit($ModelClass$SuccessState(
+        successMessage: "Dado deletado com sucesso."),
+      );
+    } catch (e) {
+      emit($ModelClass$ErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+}

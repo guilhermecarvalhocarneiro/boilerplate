@@ -1,0 +1,179 @@
+/// View/Page para listagem dos registro do $ModelClass$
+/// O método fetchAll é invocado no método initState que ocorre apenas
+/// apenas no primeiro momento de construção da View/Page. 
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
+import 'detail.dart';
+import 'create.dart';
+import '../model.dart';
+import '../controller.dart';
+import '../../../../utils/util.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+import '../../../../utils/process.controller.dart';
+
+class $ModelClass$ListPage extends StatefulWidget {
+  @override
+  $ModelClass$ListPageState createState() => $ModelClass$ListPageState();
+}
+
+class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
+  with SingleTickerProviderStateMixin {
+  // Instanciando uma chave para controle do estado do Scaffold
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando um controller para Animações
+  AnimationController _animationController;
+
+  // Instanciando uma lista de AnimalModel
+  List<$ModelClass$Model> _$Model$List = List<$ModelClass$Model>();
+
+  // Instanciando o controller via get_it
+  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Iniciando o AnimationController
+    _animationController = AnimationController(vsync: this);
+
+    // Invocando o método fetchAll para recuperar os items
+    _$ModelClassCamelCase$Controller.fetchAll();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String _title = "$ModelClass$Model";
+    return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
+      body: _buildBody(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {},
+      ),
+    );
+  }
+
+    Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        _buildPage()
+      ],
+    );
+  }
+
+  /// Widget para criar o body da views
+  Widget _buildPage() {
+    return Container(
+      alignment: FractionalOffset.topLeft,
+      child: RefreshIndicator(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _listBuilder(),
+            ],
+          ),
+        ),
+        onRefresh: _refresh,
+      ),
+    );
+  }
+
+  /// Método para criar a listagem 
+  Widget _listBuilder(){
+    return Observer(builder: (context){
+      // Verificando se está em processamento para mostrar a mensagem de carregamento
+      if(_processController.processing == true){
+        return Expanded(
+            child: Center(
+              child: Container(
+                child: CircularProgressIndicator(),
+              ),
+          ),
+        );
+      }else if(_processController.success == false) {
+        /// Ocorreu um erro
+        return Expanded(
+            child: Center(
+            child: Text(_processController.friendlyMessage),
+          ),
+        );
+      } else {
+        if(_$ModelClassCamelCase$Controller.$ModelClassCamelCase$List == null){
+          return Container();
+        }else{
+          return Expanded(
+            child: ListView.builder(
+            itemCount: _$ModelClassCamelCase$Controller.$ModelClassCamelCase$List.length,
+            itemBuilder: (BuildContext context, int index) {
+              List<$ModelClass$Model> itens = _$ModelClassCamelCase$Controller.$ModelClassCamelCase$List;
+              $ModelClass$Model _$Model$ = itens[index];
+              return GestureDetector(
+                onTap: () {
+                  _processController.clear();
+                  _$ModelClassCamelCase$Controller.$Model$Model = _$Model$;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          $ModelClass$DetailPage(),
+                    ),
+                  );
+                },
+                child: customCard(
+                    context: context, 
+                    child: Text(_$Model$.toString()),
+                ),
+              );
+            },
+           ),
+          );
+        }
+      }
+    });
+  }
+
+  /// Método para atualizar a listagem quando o usuário "puxar" a tela para baixo
+  Future _refresh() async {
+    try {
+      await _$ModelClassCamelCase$Controller.reload();
+    } catch (error) {
+
+    }
+  }
+
+  /// Método para mostrar/ocultar a barra de mensagem para o usuário
+  ///    Params:
+  ///      message -> String contendo a mensagem a ser mostrada.
+  ///      error -> bool para determinar se a mensagem é de erro ou não.
+  _showMessage(String message, {bool error}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: error == true ? Colors.red : Colors.blue,
+        ),
+      );
+    });
+  }
+}

@@ -1,0 +1,114 @@
+/// View/Page para detalhamento de um $ModelClass$
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+
+import 'update.dart';
+import '../model.dart';
+import '../controller.dart';
+import '../../../../utils/util.dart';
+import '../../../../utils/localization.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+import '../../../../utils/process.controller.dart';
+
+
+class $ModelClass$DetailPage extends StatefulWidget {
+  @override
+  _$ModelClass$DetailPageState createState() => _$ModelClass$DetailPageState();
+}
+
+class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage> 
+  with SingleTickerProviderStateMixin{
+  // Instanciando uma chave para controle do estado do Scaffold
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando um controller para Animações
+  AnimationController _animationController;
+
+  // Instanciando o controller via get_it
+  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+
+  // Instanciando o model
+  $ModelClass$Model _$Model$ = $ModelClass$Model();
+
+  @override
+  void initState() {
+    super.initState();
+    // Iniciando o AnimationController
+    _animationController = AnimationController(vsync: this);
+
+    _$Model$ = _$ModelClassCamelCase$Controller.$Model$Model;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent
+      ),
+      body: _buildBody(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.update,
+        ),
+        onPressed: () {
+          _$ModelClassCamelCase$Controller.$Model$Model = _$Model$;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => $ModelClass$UpdatePage()));
+        },
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        _buildPage()
+      ],
+    );
+  }
+
+  Widget _buildPage() {
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text(_$Model$.toString()),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Método para mostrar/ocultar a barra de mensagem para o usuário
+  ///    Params:
+  ///      message -> String contendo a mensagem a ser mostrada.
+  ///      error -> bool para determinar se a mensagem é de erro ou não.
+  _showMessage(String message, {bool error}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: error == true ? Colors.red : Colors.blue,
+        ),
+      );
+    });
+  }
+}

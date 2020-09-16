@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block content %}
+    <!--<div class="row">-->
+    <!--    <div class="col-3 col-xl-2">-->
+    <!--        &lt;!&ndash; Menu lateral com os models das app &ndash;&gt;-->
+    <!--        <div class="card">-->
+    <!--            <div class="card-header">-->
+    <!--                <h3 class="card-title"><strong>{% block title_modulo %}{% endblock title_modulo %}</strong></h3>-->
+    <!--            </div>-->
+    <!--            &lt;!&ndash; <div class="card-body"> &ndash;&gt;-->
+    <!--            <table class="table card-table">-->
+    <!--                <tbody>-->
+    <!--                    {% block menu_app %}-->
+    <!--                    {% endblock menu_app %}-->
+    <!--                </tbody>-->
+    <!--            </table>-->
+    <!--            &lt;!&ndash; </div> &ndash;&gt;-->
+    <!--        </div>-->
+    <!--    </div>-->
+<div id="div_content" class="container-fluid p-5">
+    {% block content_body_home %}
+    <h3>Bem vindo ao dashboard da Nuvols</h3>
+    {% endblock content_body_home %}
+</div>
+<!--</div>-->
+{% endblock content %}

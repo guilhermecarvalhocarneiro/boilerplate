@@ -1,0 +1,229 @@
+
+/// View/Page para edição/atualização de um $ModelClass$
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:mobx/mobx.dart';
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
+import '../model.dart';
+import '../controller.dart';
+import '../../../../utils/util.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+import '../../../../utils/process.controller.dart';
+
+class $ModelClass$UpdatePage extends StatefulWidget {
+  @override
+  _$ModelClass$AddPageState createState() => _$ModelClass$AddPageState();
+}
+
+class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage> 
+  with SingleTickerProviderStateMixin{
+  // Instanciando uma chave para controle do estado do Scaffold
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando um controller para Animações
+  AnimationController _animationController;
+
+  // Instanciando uma lista de Disposes das Reactions
+  List<ReactionDisposer> _disposers = [];
+
+  // Instanciando o controller via get_it
+  $ModelClass$Controller _$ModelClassCamelCase$Controller = GetIt.I.get<$ModelClass$Controller>();
+
+  // Instanciando o model
+  $ModelClass$Model _$Model$ = $ModelClass$Model();
+
+  // Criando os controladores do Form
+  final _form$ModelClass$ = GlobalKey<FormState>();
+
+  $Attributes$
+
+  @override
+  void initState() {
+    // Criando a reaction para mostrar a Snackbar
+    // conforme o retorno do _processController.sucess
+    _disposers.add(
+      autorun((_) {
+        if (_processController.success == true) {
+          _showMessage(_processController.message);
+          _hideKeyboard(context);
+        } else if (_processController.success == false) {
+          _showMessage("Ocorreu um erro.", error: true);
+        }
+      }),
+    );
+
+    // Iniciando o AnimationController
+    _animationController = AnimationController(vsync: this);
+
+    // Recuperando o objeto passado na chamada da view.
+    _$Model$ = _$ModelClassCamelCase$Controller.$Model$Model;
+
+    $EditedAttributes$
+
+    super.initState();
+  }
+  
+  @override
+  void dispose() {
+    _disposers.forEach((dispose) => dispose());
+    // Limpando o ProcessController
+    _processController.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent
+      ),
+      body: _buildBody(),
+    );
+  }
+  
+    Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        _buildPage(),
+      ],
+    );
+  }
+
+  Widget _buildPage() {
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: new BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height
+        ),
+        child: Container(
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              // Configurando para que a Coluna oculpe a largura máxima da tela
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
+                  child: customTitlePage(context, 
+                    'Atualizar $ModelClass$',
+                  ),
+                ),
+                 Stack(
+                  children : <Widget>[
+                    Column(
+                      children: <Widget>[
+                        _createForm(context),
+                        _createButton(context),
+                      ]
+                    ),
+                    Observer(
+                      builder: (context) {
+                        if (_processController.processing == true) {
+                          return customProcessingCardModal(context);
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
+                  ]
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _createForm(context){
+    return Form(
+      key: _form$ModelClass$,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          $Form$
+        ],
+      ),
+    );
+  }
+  
+    Widget _createButton(context){
+    return  Padding(
+      padding: const EdgeInsets.only(top: 24.0),
+      child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: customRaisedButton(
+            label: 'Salvar',
+            context: context,
+            onPress: () {
+              if (_form$ModelClass$.currentState.validate()) {
+                setState(() {
+                    // Recuperando os dados do formulário e atribuindo à instância da classe
+$AttributesData$
+                    _put();
+                });
+              }
+            },
+          ),
+        ),
+    );
+  }
+  
+void _clearForm(){
+    // Método para limpar os dados do fomulário após enviar os dados
+$ClearData$
+}
+
+  void _put() async {
+    // Método para enviar a requisição de inserção de dados para a API
+    try{
+      // Recuperando os valores do controller
+$GetValuesControllers$
+
+      // Invocando o método do Controller para atualizar
+      _$Model$Controller.$Model$Model = _$Model$;
+      _$Model$Controller.put();
+    }catch (e){
+
+    }
+  }
+
+  /// Método para mostrar/ocultar a barra de mensagem para o usuário
+  ///    Params:
+  ///      message -> String contendo a mensagem a ser mostrada.
+  ///      error -> bool para determinar se a mensagem é de erro ou não.
+  _showMessage(String message, {bool error = false}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        error == false
+            ? customSuccessSnackbar(message)
+            : customErrorSnackbar(message),
+      );
+    });
+  }
+  
+  /// Método para ocultar o teclado após o usuário clicar no botão de Salvar
+  ///    Parameters:
+  ///        context -> BuildContext
+  _hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+}

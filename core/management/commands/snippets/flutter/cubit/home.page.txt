@@ -1,0 +1,224 @@
+/// Página inicial da APP.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+/// 
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'apps/configuracao/cubit.dart';
+import 'user_interface/widget.dart';
+import 'utils/config.dart';
+import 'utils/localization.dart';
+
+$ImportViews$
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+/// Caso deseje ativar a pela barra inferior BottomNavigationBar deve-se setar a
+/// variável [bottomNavigationEnable], depois criar as páginas que serão invocadas quando o usuário
+/// clicar nos elementos e vinculas à lista de páginas disponíveis conforme exemplo  seguir
+///
+///     _pages = [PaginaUm(), PaginaDois(), PaginaTres(), ..., PaginaN()]
+///
+/// lembre-se que a quantidade de páginas deve ser igual à quantidade de filhos do parâmetro
+/// items do BottomNavigationBar, também é necessário alterar o valor passado para o body, que
+/// que deve ser _currentPage.
+///
+
+class _MyHomePageState extends State<MyHomePage> {
+  PageController _pageController;
+  bool bottomNavigationEnable = false;
+
+  // Declarando o inteiro para controlar qual página deve ser exibida
+  int _page = 0;
+
+  // Declarando uma instancia da Classe dos items do Menu
+  final Itens _itensMenuGridView = Itens();
+
+  // Declarando a lista de Widgets que devem conter as páginas no caso de ser configurada
+  // por meu do bottomNavigationBar
+  List<Widget> _pages;
+
+  /// Declarando o Widget da página atual para o caso de ser configurado a
+  /// por meio do ButtonNavigationBar
+  Widget _currentPage;
+
+  @override
+  void initState() {
+    _itensMenuGridView.make();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          //title: customAppBarTitle(
+          //  context,
+          //  widget.title,
+          // ),
+          actions: _buildAction(context),
+          backgroundColor: Colors.transparent,
+        ),
+        body: _buildGridView(context),
+        bottomNavigationBar: _buildBottomNavigationBar(context));
+  }
+
+  List<Widget> _buildAction(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.settings),
+          tooltip: AppLocalizations.of(context)
+              .translate("page_label_configuration"),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => SettingsIndexPage()),
+            );
+          }),
+    ];
+  }
+
+  Widget _buildGridView(BuildContext context) {
+    return Stack(children: <Widget>[
+      HeadWidget(),
+      ContentWidget(
+        widgetChild: GridView.count(
+          crossAxisCount: 2,
+          children: List.generate(_itensMenuGridView.list.length, (index) {
+            return Center(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          _itensMenuGridView.list[index].geturi(),
+                    ),
+                  );
+                },
+                child: BlocConsumer<SettingsCubit, SettingsState>(
+                  listener: (context, state){},
+                  builder:
+                      (context, state) {
+                    return customMainCardButton(
+                      _itensMenuGridView.list[index].icon,
+                      _itensMenuGridView.list[index].title,
+                      iconColor: context.bloc<SettingsCubit>().lightTheme == true
+                          ? CustomTheme.mainCardLightIconColor
+                          : CustomTheme.mainCardDarkIconColor,
+                      textColor: context.bloc<SettingsCubit>().lightTheme == true
+                          ? CustomTheme.mainCardLightTextColor
+                          : CustomTheme.mainCardDarkTextColor,
+                      cardBackgroundColorBegin:
+                          context.bloc<SettingsCubit>().lightTheme == true
+                              ? CustomTheme.mainCardLightBackgroundColor
+                              : CustomTheme.mainCardDarkBackgroundColor,
+                      cardBackgroundColorEnd:
+                          context.bloc<SettingsCubit>().lightTheme == true
+                              ? CustomTheme.mainCardLightBackgroundColor
+                              : CustomTheme.mainCardDarkBackgroundColor,
+                      boxShadowColor: context.bloc<SettingsCubit>().lightTheme == true
+                          ? CustomTheme.mainCardLightShadowColor
+                          : CustomTheme.mainCardDarkShadowColor,
+                      cardBorderColor: context.bloc<SettingsCubit>().lightTheme == true
+                          ? CustomTheme.mainCardLightBackgroundColor
+                          : CustomTheme.mainCardDarkBackgroundColor,
+                    );
+                  },
+                ),
+              ),
+            );
+          }),
+        ),
+      )
+    ]);
+  }
+
+  Widget _buildBottomNavigationBar(BuildContext context) {
+    if (bottomNavigationEnable == false) return null;
+    return Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: Theme.of(context).primaryColor,
+        primaryColor: Theme.of(context).accentColor,
+        textTheme: Theme.of(context).textTheme.copyWith(
+              caption: TextStyle(color: Colors.grey[500]),
+            ),
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+            ),
+            title: Container(height: 0.0),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.favorite,
+            ),
+            title: Container(height: 0.0),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.supervised_user_circle,
+            ),
+            title: Container(height: 0.0),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.grid_on,
+            ),
+            title: Container(height: 0.0),
+          ),
+        ],
+        onTap: _navigationTapped,
+        currentIndex: _page,
+      ),
+    );
+  }
+
+  _navigationTapped(int page) {
+    setState(() {
+      _page = page;
+      _currentPage = _pages[_page];
+    });
+  }
+}
+
+class Itens {
+  final String title;
+  final IconData icon;
+  final Widget uri;
+  final Image imageIcon;
+
+  Itens({this.title, this.icon, this.uri, this.imageIcon});
+
+  List<Itens> list = [];
+
+  void make() {
+    // Exemplo de inserção de uma imagem do Assets como Card
+    // list.add(Itens(
+    //     title: 'arquivo importacao',
+    //     icon: null,
+    //     imageIcon: Image.asset("assets/icons/icons8-calendar-500.png",
+    //         width: MediaQuery.of(context).size.width / 4, color: Colors.red),
+    //     uri: Container()));
+
+    $ItenMenu$
+  }
+
+  Widget geturi() => uri;
+}

@@ -1,0 +1,32 @@
+<!--
+Arquivo gerado automaticamente pelo build.
+Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra a seguir
+FileLocked
+-->
+
+{% extends 'core/index_delete.html' %} 
+{% block title %}Delete $title${% endblock title %} 
+{% block title_modulo %}$title${% endblock title_modulo %} 
+{% block menu_app %}
+    {% for app in apps %}
+        {% if app.real_name_app.lower == '$app_name$' %}
+            {% for model in app.models_app %}
+            <tr>
+                <td>
+                    <i class="fe fe-chevrons-right text-muted"></i> &nbsp;
+                    <a href="{% url model.path_url %}"> {{ model.name_model|title }} </a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{% endblock menu_app %} 
+{% block titledelete_app %}
+<h3 class="m-4">Apagar: {{ object }} ?</h3>{% endblock titledelete_app %}
+{% block delete_app %}
+    <form class="needs-validation was-validated" method="post" novalidate>
+        {% csrf_token %}
+        <input type="submit" class="btn btn-outline-danger" value="Confirma exclusão?">
+        <a href="{% url '$app_name$:$model_name$-list' %}" class="btn btn-primary">Cancelar exclusão.</a>
+    </form>
+{% endblock delete_app %}

@@ -1,0 +1,91 @@
+import '../usuario/cliente/model.dart';
+
+import 'data.dart';
+
+class AuthModel {
+  String id;
+  String uuid;
+  String name;
+  String email;
+  String login;
+  String socialProfileLogin;
+  String account;
+  String password;
+  String cpf;
+  String phoneNumber;
+  String token;
+  String firebaseId;
+
+  AuthModel(
+      {this.id,
+      this.uuid,
+      this.name,
+      this.email,
+      this.login,
+      this.socialProfileLogin,
+      this.account,
+      this.password,
+      this.cpf,
+      this.phoneNumber,
+      this.token});
+
+  AuthModel.fromClienteModel(ClienteModel client) {
+    name = client.nome;
+    cpf = client.cpf;
+    email = client.email;
+    phoneNumber = client.telefone;
+    token = client.token;
+    firebaseId = client.firebase;
+  }
+
+  Future<bool> logout() async{
+    try {
+      AuthData _authData= AuthData();
+      _authData.deleteAll();
+    } catch (e) {
+    }
+  }
+
+  AuthModel.fromMap(Map<String, dynamic> json) {
+    id = json['id'];
+    uuid = json['uuid'];
+    name = json['name'];
+    email = json['email'];
+    password = json['password'];
+    login = json['login'];
+    socialProfileLogin = json['socialProfileLogin'];
+    account = json['account'];
+    cpf = json['cpf'];
+    phoneNumber = json['telefone'];
+    token = json['token'];
+  }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['uuid'] = this.uuid;
+    data['name'] = this.name;
+    data['email'] = this.email;
+    data['password'] = this.password;
+    data['login'] = this.login;
+    data['socialProfileLogin'] = this.socialProfileLogin;
+    data['account'] = this.account;
+    data['cpf'] = this.cpf;
+    data['telefone'] = this.phoneNumber;
+    data['token'] = this.token;
+    return data;
+  }
+
+  String get profileName {
+    try {
+      if (this.account == null) return "";
+      return this.account;
+    } catch (e) {}
+    return "";
+  }
+
+  @override
+  String toString() {
+    return 'AuthModel{id: $id, uuid: $uuid, name: $name, email: $email, login: $login, socialProfileLogin: $socialProfileLogin, account: $account, password: $password, cpf: $cpf, token: $token}';
+  }
+}

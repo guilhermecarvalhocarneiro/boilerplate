@@ -1,0 +1,54 @@
+<!--
+Arquivo gerado automaticamente pelo build.
+Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra a seguir
+FileLocked
+-->
+
+{% extends "outside_template/base.html" %}
+{% load staticfiles %}{% load base %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <h2>{% block title_modulo %}$title${% endblock title_modulo %}</h2>
+            </div>
+            <div class="col-md-2">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Imprimir"><i class="fa fa-print" aria-hidden="true"></i></a>
+                    <a href="{% url '$app_name$:$model_name$-update' $model_name$.pk %}" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="fa fa-pencil" aria-hidden="true"></i> </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="div-table" class="col-md-12">
+                {% for field in object_list %}
+                    <div class="row">
+                        <div class="col-md-2">
+                           <strong>{{ field.0|capfirst }}</strong>
+                        </div>
+                        <div class="col-md-10">
+                            {{ field.1 }}
+                        </div>
+                    </div>
+                {%  endfor  %}
+                <br>
+            </div>
+        </div>
+
+        {% for field in many_fields  %}
+            <strong>{{ field.0|capfirst }}</strong><br>
+            {% for obj in field.1.all %}
+               {{ obj }}
+                <br>
+            {% endfor %}
+        {% endfor %}
+
+
+        <div id="div-barra-acao" class="row">
+            <div id="div-acao" class="col-md-11">
+                <!-- Div para as ações caso existam -->
+            </div>
+        </div>
+    </div>
+{% endblock content %}

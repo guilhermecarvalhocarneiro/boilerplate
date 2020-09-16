@@ -1,0 +1,101 @@
+
+/// Page/View para controle das configurações da App.
+///
+///    O CÓDIGO DO ARQUIVO controller.g.dart NUNCA DEVE SER ALTERADO MANUALMENTE.
+///    Quando for alterado algo no arquivo controller.dart deve ser executado o comando:
+///      flutter pub run build_runner build
+///
+/// Após a execução do comando acima o arquivo controller.g.dart terá sido atualizado
+/// com as novas features.
+///
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
+import '../../user_interface/widget.dart';
+import '../../utils/localization.dart';
+
+import 'controller.dart';
+
+class SettingsIndexPage extends StatefulWidget {
+  @override
+  _SettingsIndexPageState createState() => _SettingsIndexPageState();
+}
+
+class _SettingsIndexPageState extends State<SettingsIndexPage> {
+  // Instanciando uma chave para controle do estado do Scaffold
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Instanciando o controller via get_it
+  SettingsController _settingsController = GetIt.I.get<SettingsController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).translate("page_label_configuration")),
+        centerTitle: true,
+      ),
+      body: Observer(builder: (_) {
+        print(_settingsController.lightTheme.toString());
+        return Container(
+          height: 300,
+          color: _settingsController.lightTheme == true? Colors.white: Colors.black,
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 60,
+                width: MediaQuery.of(context).size.width * .9,
+                child: customButtonOutline(
+                  borderColor: Colors.red,
+                  textColor: Colors.red,
+                  rounded: true,
+                label: "Dark",
+                onPress: () {
+                  _settingsController.setTheme(false);
+                },
+                context: context),
+              ),
+              Container(
+                height: 60,
+                width: MediaQuery.of(context).size.width * .9,
+                child: customButtonOutline(
+                  borderColor: Colors.white,
+                  textColor: Colors.white,
+                  rounded: true,
+                label: "Light",
+                onPress: () {
+                  _settingsController.setTheme(true);
+                },
+                context: context),
+              ),
+            ],
+          )
+        ),
+      );
+      },)
+    );
+  }
+
+  /// Método para mostrar/ocultar a barra de mensagem para o usuário
+  ///    Params:
+  ///      message -> String contendo a mensagem a ser mostrada.
+  ///      error -> bool para determinar se a mensagem é de erro ou não.
+  _showMessage(String message, {bool error}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: error == true ? Colors.red : Colors.blue,
+        ),
+      );
+    });
+  }
+}
