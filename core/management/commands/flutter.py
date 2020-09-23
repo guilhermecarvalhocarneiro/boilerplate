@@ -957,6 +957,9 @@ class Command(BaseCommand):
         """
         try:
             __dio_file = Path(f"{self.flutter_dir}/lib/utils/custom_dio.dart")
+            
+            if Utils.check_file_is_locked(__dio_file):
+                return
 
             content = ParserContent(["$project$", ], [self.flutter_project, ],
                                     self.__get_snippet(f"{self.snippet_dir}/custom_dio.txt")).replace()
@@ -1007,7 +1010,6 @@ class Command(BaseCommand):
             __file = app.get_path_provider_file()
 
             if Utils.check_file_is_locked(__file):
-                print("Arquivo travado")
                 return
 
             content = ParserContent(
@@ -1036,7 +1038,6 @@ class Command(BaseCommand):
             __file_cubit_state = app.get_path_cubit_state_file()
 
             if Utils.check_file_is_locked(__file_cubit):
-                print("Arquivo travado")
                 return
 
             content = ParserContent(
@@ -1638,6 +1639,8 @@ class Command(BaseCommand):
 
             self.current_app_model = AppModel(self.flutter_project, app, model)
             self.call_methods(options)
+            self.__create_source_from_model()
+            return
 
         if app and model is None:
             if Utils.contain_number(app):
@@ -1646,6 +1649,10 @@ class Command(BaseCommand):
 
             self.current_app_model = AppModel(self.flutter_project, app)
             self.call_methods(options)
+            """TODO Criar método para gerar o projeto baseado apenas na App
+            sendo necessário percorrer todos os models da App e chamar o 
+            método self.__create_source_from_model()"""
+            return
 
         if not FLUTTER_APPS:
             Utils.show_message("Não foram informadas as APPS a serem mapeadas", error=True)
