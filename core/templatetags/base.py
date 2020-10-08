@@ -45,8 +45,25 @@ def has_add_permission(model=None, request=None):
     Verifica se o usuario tem a permissão de adicionar, no model passado
     ex: {if model|has_add_permission:request %}
     """
-    if model and hasattr(model, 'has_add_permission') and request:
-        return model.has_add_permission(request=request)
+    __app, __model = model.get('path_url').split(":")
+    __model = __model.split("-")[0]
+    __permission = f"{__app}.add_{__model}"
+    if model and request:
+        return request.user.has_perm(__permission)
+    else:
+        return False
+
+@register.filter()
+def has_view_permission(model=None, request=None):
+    """
+    Verifica se o usuario tem a permissão de adicionar, no model passado
+    ex: {if model|has_add_permission:request %}
+    """
+    __app, __model = model.get('path_url').split(":")
+    __model = __model.split("-")[0]
+    __permission = f"{__app}.view_{__model}"
+    if model and request:
+        return request.user.has_perm(__permission)
     else:
         return False
 
@@ -57,8 +74,11 @@ def has_change_permission(model=None, request=None):
     Verifica se o usuario tem a permissão de alterar, no model passado
     ex: {if model|has_change_permission:request %}
     """
-    if model and hasattr(model, 'has_change_permission') and request:
-        return model.has_change_permission(request=request)
+    __app, __model = model.get('path_url').split(":")
+    __model = __model.split("-")[0]
+    __permission = f"{__app}.change_{__model}"
+    if model and request:
+        return request.user.has_perm(__permission)
     else:
         return False
 
@@ -69,7 +89,10 @@ def has_delete_permission(model=None, request=None):
     Verifica se o usuario tem a permissão de deletar, no model passado
     ex: {if model|has_delete_permission:request %}
     """
-    if model and hasattr(model, 'has_delete_permission') and request:
-        return model.has_delete_permission(request=request)
+    __app, __model = model.get('path_url').split(":")
+    __model = __model.split("-")[0]
+    __permission = f"{__app}.delete_{__model}"
+    if model and request:
+        return request.user.has_perm(__permission)
     else:
         return False
