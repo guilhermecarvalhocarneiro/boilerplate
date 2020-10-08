@@ -7,11 +7,13 @@
             <div class="col-lg order-lg-first" style="margin-bottom: -4px;">
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
                     {% for app in apps %}
-                    <li class="nav-item">
-                        <a href="{% url app.index_url_app %}" class="nav-link active">
-                            <i class="fe fe-box"></i> {{ app.name_app }}
-                        </a>
-                    </li>
+                        {% if app.real_name_app.lower in perms %}
+                            <li class="nav-item">
+                                <a href="{% url app.index_url_app %}" class="nav-link active">
+                                    <i class="fe fe-box"></i> {{ app.name_app }}
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>
