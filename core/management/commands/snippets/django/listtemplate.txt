@@ -1,10 +1,11 @@
 <!--
 Arquivo gerado automaticamente pelo build.
-Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra a seguir
-FileLocked
+Caso deseje desbloquear o parser nesse arquivo, basta remover o caracter #(cerquilha) antes da palavra a seguir
+#FileLocked
 -->
 
 {% extends 'core/index_list.html' %} 
+{% load base %}
 {% block title %}Listagem $title${% endblock title %} 
 {% block title_modulo %}$title${% endblock title_modulo %} 
 {% block menu_app %}
