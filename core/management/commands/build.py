@@ -868,6 +868,7 @@ class Command(BaseCommand):
                 if str(field).split('.')[2] not in ('updated_on', 'created_on', 'deleted', 'enabled', 'id'):
                     html_tag += self.__render_input(field)
             if html_tag != '':
+                import pdb; pdb.set_trace()
                 for temp in ['create', 'update']:
                     list_update_create = Path(
                         f"{self.path_template_dir}/{self.model_lower}_{temp}.html")

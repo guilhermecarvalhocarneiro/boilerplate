@@ -2,9 +2,9 @@
 {% load base %}
 
 <!--
-Arquivo gerado automaticamente pelo build
-Caso deseje desbloquear o parser nesse arquivo, basta remover o caracter #(cerquilha) antes da palavra a seguir
-#FileLocked
+Arquivo gerado automaticamente pelo build.
+Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerquilha) antes da palavra a seguir
+FileLocked
 
 Exemplos AJAX consumindo a API DRJ
 
