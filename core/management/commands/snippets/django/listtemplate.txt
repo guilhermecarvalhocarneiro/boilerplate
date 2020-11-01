@@ -42,7 +42,7 @@ FileLocked
                 <a href="{% url '$app_name$:$model_name$-update' item.pk %}" data-toggle="tooltip" data-placement="bottom" title="Editar Registro.">
                     <i class="fe fe-edit"></i>
                 </a>
-                <a href="{% url '$app_name$:$model_name$-update' item.pk %}" class="mx-3" data-toggle="tooltip" data-placement="bottom" title="Visualizar Registro.">
+                <a href="{% url '$app_name$:$model_name$-detail' item.pk %}" class="mx-3" data-toggle="tooltip" data-placement="bottom" title="Visualizar Registro.">
                     <i class="fe fe-eye"></i>
                 </a>
                 <a href="{% url '$app_name$:$model_name$-delete' item.pk %}" data-toggle="tooltip" data-placement="bottom" title="Excluir Registro.">

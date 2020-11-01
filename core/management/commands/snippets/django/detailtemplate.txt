@@ -4,9 +4,26 @@ Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerqui
 FileLocked
 -->
 
-{% extends "outside_template/base.html" %}
-{% load staticfiles %}
+{% extends 'core/index_detail.html' %} 
+{% load static %}
 {% load base %}
+
+{% block menu_app %}
+    {% for app in apps %}
+        {% if app.real_name_app.lower == '$app_name$' %}
+            {% for model in app.models_app %}
+                {% if model|has_view_permission:request %}
+                    <tr>
+                        <td>
+                            <i class="fe fe-chevrons-right text-muted"></i> &nbsp;
+                            <a href="{% url model.path_url %}"> {{ model.name_model|title }} </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{% endblock menu_app %}
 
 {% block content %}
     <div class="container">
