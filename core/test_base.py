@@ -26,3 +26,7 @@ class BaseApiTestCase(APITestCase):
     def get_url_atualizar_excluir(self, app, modelo, pk):
         return '/core/api/{0}/{1}/{2}/?format=json'.format(app, modelo, pk)
 
+    def get_url_custom(self, app, modelo, metodo):
+        return '/core/api/{0}/{1}/{2}/?format=json'.format(app, modelo, metodo)
+
+
