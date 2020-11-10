@@ -194,7 +194,7 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         if self.template_name is None:
             raise ValidationError(
                 message='Deve ser definido o caminho do \
-                         template na variavel "template_name" em sua Views!')
+                         template na variável "template_name" em sua Views!')
         super(BaseListView, self).__init__()
 
     def get_permission_required(self):
@@ -562,7 +562,7 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                         continue
                 list_item.append(field_dict)
 
-            # reinciro a lista modificada para aproveitar a variavel page_list e retornar apenas um objeto, no template eu separo de novo
+            # reinício da lista modificada para aproveitar a variavel page_list e retornar apenas um objeto, no template eu separo de novo
             context['object_list'] = list_item
             context['system_name'] = SYSTEM_NAME
 

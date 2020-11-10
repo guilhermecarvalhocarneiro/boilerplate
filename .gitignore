@@ -141,3 +141,5 @@ cython_debug/
 # PyCharm idea
 .idea/
 nuvols.rar
+
+core/tabler_demo

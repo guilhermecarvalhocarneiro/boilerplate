@@ -5,7 +5,8 @@ FileLocked
 -->
 
 {% extends "outside_template/base.html" %}
-{% load staticfiles %}{% load base %}
+{% load staticfiles %}
+{% load base %}
 
 {% block content %}
     <div class="container">
