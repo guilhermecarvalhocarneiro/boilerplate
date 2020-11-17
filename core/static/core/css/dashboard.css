@@ -97,7 +97,7 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
-body{
+body {
   overflow: hidden !important;
 }
 
@@ -106,7 +106,9 @@ thead>tr>th {
 }
 
 #form_create_card,
-#form_update_card, #listview_card {
+#detail_card,
+#form_update_card,
+#listview_card {
   overflow-y: scroll !important;
   max-height: 85% !important;
 }
