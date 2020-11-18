@@ -4,29 +4,38 @@ Caso deseje bloquear o parser nesse arquivo, basta adicionar o caracter #(cerqui
 FileLocked
 -->
 
-{% extends "outside_template/base.html" %}
-{% load staticfiles %}
+{% extends 'core/index_detail.html' %} 
+{% load static %}
 {% load base %}
+{% block title_modulo %}}$title${% endblock title_modulo %} 
+{% block menu_app %}
+    {% for app in apps %}
+        {% if app.real_name_app.lower == '$app_name$' %}
+            {% for model in app.models_app %}
+                {% if model|has_view_permission:request %}
+                    <tr>
+                        <td>
+                            <i class="fe fe-chevrons-right text-muted"></i> &nbsp;
+                            <a href="{% url model.path_url %}"> {{ model.name_model|title }} </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{% endblock menu_app %}
 
-{% block content %}
-    <div class="container">
+{% block titledelete_app %}<h2 class=m-3>$title$</h2>{% endblock titledelete_app %}
+
+{% block detail %}
+    <div class="container-fluid m-3">
         <div class="row">
-            <div class="col-md-10">
-                <h2>{% block title_modulo %}$title${% endblock title_modulo %}</h2>
-            </div>
-            <div class="col-md-2">
-                <div class="btn-group" role="group">
-                    <a class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Imprimir"><i class="fa fa-print" aria-hidden="true"></i></a>
-                    <a href="{% url '$app_name$:$model_name$-update' $model_name$.pk %}" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Editar"><i class="fa fa-pencil" aria-hidden="true"></i> </a>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div id="div-table" class="col-md-12">
+            <!-- TODO: Após ajustar o layout remover o for abaixo -->
+            {% comment %} <div id="div-table" class="col-md-12">
                 {% for field in object_list %}
                     <div class="row">
                         <div class="col-md-2">
-                           <strong>{{ field.0|capfirst }}</strong>
+                        <strong>{{ field.0|capfirst }}</strong>
                         </div>
                         <div class="col-md-10">
                             {{ field.1 }}
@@ -34,16 +43,17 @@ FileLocked
                     </div>
                 {%  endfor  %}
                 <br>
-            </div>
+            </div> {% endcomment %}
         </div>
 
-        {% for field in many_fields  %}
-            <strong>{{ field.0|capfirst }}</strong><br>
-            {% for obj in field.1.all %}
-               {{ obj }}
-                <br>
-            {% endfor %}
-        {% endfor %}
+        {% comment %} 
+            {% for field in many_fields  %}
+                <strong>{{ field.0|capfirst }}</strong><br>
+                {% for obj in field.1.all %}
+                    {{ obj }}<br>
+                {% endfor %}
+            {% endfor %} 
+        {% endcomment %}
 
 
         <div id="div-barra-acao" class="row">
@@ -52,4 +62,4 @@ FileLocked
             </div>
         </div>
     </div>
-{% endblock content %}
+{% endblock detail %}

@@ -469,7 +469,7 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             # processa os parametros para retorna-los ao template
             query_params = dict(self.request.GET)
             if query_params:
-                # retira o parametro page e add ele em outra variavel, apensas dele
+                # retira o parametro page e add ele em outra variável, apensas dele
                 if query_params.get('page'):
                     query_params.pop('page')
                 # retira o csrf token caso exista
@@ -482,10 +482,10 @@ class BaseListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                                                       value[0].replace(" ", "+"))
                 # add a url dos filtros e da pesquisa no context
                 context['url_pagination'] = url_pagination
-                # retira o parametro do campo de pesquisa e add ele em outra variavel no context apensas dele
+                # retira o parametro do campo de pesquisa e add ele em outra variável no context apensas dele
                 if query_params.get('q'):
                     context['query_params_q'] = query_params.pop('q')[0]
-                # O apos todas as verificações sobram os filtros que são add em outra variavel no context apenas dele.
+                # O apps todas as verificações sobram os filtros que são add em outra variável no context apenas dele.
                 context['query_params_filters'] = query_params
 
             # manipulo a lista para tratar de forma diferente
