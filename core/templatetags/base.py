@@ -42,21 +42,19 @@ def get_many_to_many(obj, object_list):
 @register.filter()
 def has_add_permission(model=None, request=None):
     """
-    Verifica se o usuario tem a permissão de adicionar, no model passado
+    Verifica se o usuário tem a permissão de adicionar, no model passado
+
     ex: {if model|has_add_permission:request %}
     """
-    __app, __model = model.get('path_url').split(":")
-    __model = __model.split("-")[0]
-    __permission = f"{__app}.add_{__model}"
-    if model and request:
-        return request.user.has_perm(__permission)
+    if model and hasattr(model, 'has_add_permission') and request:
+        return model.has_add_permission(request=request)
     else:
         return False
 
 @register.filter()
 def has_view_permission(model=None, request=None):
     """
-    Verifica se o usuario tem a permissão de adicionar, no model passado
+    Verifica se o usuário tem a permissão de adicionar, no model passado
     ex: {if model|has_add_permission:request %}
     """
     __app, __model = model.get('path_url').split(":")
