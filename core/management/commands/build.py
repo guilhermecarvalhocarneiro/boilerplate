@@ -562,7 +562,7 @@ class Command(BaseCommand):
         """Method responsible for creating the ClassBasedViews CRUD file for the model
         """
         try:
-            __snnipet_index_template = self._snippet_index_view
+            __snippet_index_template = self._snippet_index_view
             Utils.show_message("Trabalhando na configuração das Views do model {}".format(self.model))
             content = self._snippet_crud_view
             content_urls = self._snippet_crud_urls
@@ -618,11 +618,11 @@ class Command(BaseCommand):
                 Utils.show_message(f"Error in __manage_views {error}")
 
             if self.__check_content(self.path_views, "{}IndexTemplateView".format(self.app.title())) is False:
-                __snnipet_index_template = __snnipet_index_template.replace(
+                __snippet_index_template = __snippet_index_template.replace(
                     "$AppClass$", self.app.title())
-                __snnipet_index_template = __snnipet_index_template.replace(
+                __snippet_index_template = __snippet_index_template.replace(
                     "$app_name$", self.app_lower)
-                content = __snnipet_index_template + content
+                content = __snippet_index_template + content
 
             if self.__check_file(self.path_views) is False:
                 with open(self.path_views, 'w', encoding='utf-8') as arquivo:
@@ -855,7 +855,6 @@ class Command(BaseCommand):
 
     def __manage_render_html(self):
         """Method for rendering models CRUD templates"""
-        # TODO Verificar erro nesse método
         try:
             model = self.__get_model()
             if model is None:
@@ -1007,7 +1006,7 @@ class Command(BaseCommand):
                     Utils.show_message(f"Error in handler : {error}")
             else:
                 for model in self.app_instance.get_models():
-                    Utils.show_message(f"Gerando os arquivos para a app: {self.app}")
+                    Utils.show_message(f"Gerando os arquivos para a app {self.app} e model {model.__name__.strip()}")
                     model = model.__name__
                     self.model = model.strip()
                     self.model_lower = model.lower()
