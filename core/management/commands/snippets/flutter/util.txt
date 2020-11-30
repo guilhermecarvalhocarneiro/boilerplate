@@ -195,7 +195,7 @@ class Util {
     }
   }
 
-  /// Método Estatico para retornar o tamanho da tela do device
+  /// Método estático para retornar o tamanho da tela do device
   ///   
   ///  Parameters:
   ///      context
@@ -207,7 +207,7 @@ class Util {
     return MediaQuery.of(context).size.width * proportion;
   }
   
-  /// Método Estatico para retornar o tamanho da tela do device
+  /// Método estático para retornar o tamanho da tela do device
   ///   
   ///  Parameters:
   ///      context
@@ -218,4 +218,20 @@ class Util {
   static double getProportionScreenHeight(BuildContext context, double proportion){
     return MediaQuery.of(context).size.height * proportion;
   }
+
+  /// Método estático para retornar o tamanho da barra do sistema Android / iOS
+  ///
+  /// Parameters:
+  ///     context
+  ///     double incrementHeight: valor adicionar a ser acrescentado a altura 
+  ///                             da barra do sistema.
+  ///  
+  ///  Return:
+  ///      Double
+  /// 
+  static double getHeightSystemBar(BuildContext context,
+      {double incrementHeight = 0.0}) {
+    return MediaQuery.of(context).padding.top + incrementHeight;
+  }
+
 }
