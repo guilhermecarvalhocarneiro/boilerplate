@@ -17,12 +17,19 @@ import '../cubit.dart';
 import 'update.dart';
 
 class $ModelClass$DetailPage extends StatefulWidget {
+  final $ModelClass$Model $ModelClassCamelCase$Model;
+
+  const $ModelClass$DetailPage({Key key, this.$ModelClassCamelCase$Model})
+      : super(key: key);
+
   @override
   _$ModelClass$DetailPageState createState() => _$ModelClass$DetailPageState();
 }
 
 class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage> 
   with SingleTickerProviderStateMixin{
+
+  $ModelClass$Model _$ModelClassCamelCase$Model;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   AnimationController _animationController;
 
@@ -31,6 +38,7 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
   @override
   void initState() {
     super.initState();
+    this._$ModelClassCamelCase$Model = widget.$ModelClassCamelCase$Model;
     _animationController = AnimationController(vsync: this);
   }
 

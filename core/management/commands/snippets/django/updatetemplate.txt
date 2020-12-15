@@ -74,7 +74,7 @@ Delete (Deletar um novo registro via API)
     <!--REPLACE_PARSER_HTML-->
   </div>
 
-    {% block contentinline %}
+    {% block content_inline %}
     <!-- Bloco para renderizar os formularios configurados no inline -->
         {% if list_inlines %}
             {% for formset in list_inlines %}
@@ -140,7 +140,7 @@ Delete (Deletar um novo registro via API)
                                                         <small class="form-text text-muted">{{ field_formset.help_text|safe }}</small>
                                                     {% endif %}
 
-                                                {# TRATANDO OS CAMPOS FILES E IMAGENS#}
+                                                {# TRATANDO OS CAMPOS FILES E IMAGENS #}
                                                 {% elif field_formset.field.widget.input_type == 'file' %}
                                                     {{ field_formset.label_tag }}
                                                     <div class="w-100">
@@ -149,6 +149,7 @@ Delete (Deletar um novo registro via API)
                                                     {% if field_formset.help_text %}
                                                         <small class="form-text text-muted">{{ field_formset.help_text|safe }}</small>
                                                     {% endif %}
+
                                                 {# TRATANDO OS DEMAIS CAMPOS #}
                                                 {% else  %}
                                                     {{ field_formset.label_tag }}
@@ -160,7 +161,7 @@ Delete (Deletar um novo registro via API)
                                                     {% endif %}
                                                     {% if field_formset.field.required %}
                                                         <div class="invalid-feedback">
-                                                            Campo Obrigatorio.
+                                                            Campo Obrigatório.
                                                         </div>
                                                     {% endif %}
                                                 {% endif %}
@@ -196,7 +197,7 @@ Delete (Deletar um novo registro via API)
                 </div>
             {% endfor %}
         {% endif %}
-    {% endblock contentinline %}
+    {% endblock content_inline %}
 
   <div class="col-12 m-0 p-0 text-right">
     <div class="btn-list">
