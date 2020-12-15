@@ -567,8 +567,9 @@ class Command(BaseCommand):
                 __app = __current_app.app_name
 
                 for model in __current_app.models:
+                    print(model[1])
                     __import += f"import 'apps/{__app.lower()}/{model[1].lower()}/cubit.dart';\n"
-                    _register += f"BlocProvider<{model[1].title()}Cubit>(create: (_) => {model[1].title()}Cubit(),),\n"
+                    _register += f"BlocProvider<{model[1]}Cubit>(create: (_) => {model[1]}Cubit(),),\n"
 
             __import += f"import 'apps/auth/cubit.dart';\n"
             _register += f"BlocProvider<SettingsCubit>(create: (_) => SettingsCubit(),),\n"
