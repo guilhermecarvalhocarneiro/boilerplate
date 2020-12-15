@@ -97,35 +97,35 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
         }
         if (state is $ModelClass$SuccessState){
             if(state.$ModelClassCamelCase$List  == null) {
-                return Container(
-                    child: Center(
-                        child: Text("Nenhum Item Retornado"),
-                    ),
-                );
+              return Container(
+                child: Center(
+                  child: Text("Nenhum Item Retornado"),
+                ),
+              );
             }
             if (state.$ModelClassCamelCase$List.length > 0){
-                return Container(
-                    child: ListView.builder(
-                      itemCount: state.$ModelClassCamelCase$List.length,
-                      itemBuilder: (context, index) {
-                        $ModelClass$Model _$ModelClassCamelCase$ = state.$ModelClassCamelCase$List[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => $ModelClass$DetailPage($ModelClassCamelCase$Model: _$ModelClassCamelCase$,),
-                              ),
-                            );
-                          },
-                          child: customCard(
-                            context: context,
-                            child: Text(_$ModelClassCamelCase$.toString()),
+              return Container(
+                margin: EdgeInsets.only(top: Util.getHeightSystemBar(context)),
+                height: Util.getProportionScreenHeight(context, 0.8),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: MediaQuery.of(context).size.height / 380,
+                  crossAxisSpacing: 2.0,
+                  mainAxisSpacing: 4.0,
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  children:
+                    List.generate(state.$ModelClassCamelCase$List.length, (index) {
+                      return Card(
+                        child: Container(
+                          child: Center(
+                            child: Text(state.$ModelClassCamelCase$List[index].id.toString()),
                           ),
-                        );
-                      },
-                    )
-                );
+                        ),
+                      );
+                    }),
+                ),
+              );
             }
             return Container(
                 child: Center(
