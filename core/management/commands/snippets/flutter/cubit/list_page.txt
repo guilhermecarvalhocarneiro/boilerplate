@@ -119,7 +119,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
                       return Card(
                         child: Container(
                           child: Center(
-                            child: Text(state.$ModelClassCamelCase$List[index].id.toString()),
+                            child: Text(state.$ModelClassCamelCase$List[index].toString()),
                           ),
                         ),
                       );

@@ -530,8 +530,8 @@ class Command(BaseCommand):
                 for model in __current_app.models:
                     __model = model[1]
                     __itens_menu += f"list.add(Itens(title: '{__model.title()}'"
-                    __itens_menu += f",icon: FontAwesomeIcons.folderOpen,uri: {__app.title()}{__model.title()}"
-                    __itens_menu += f"Views.{__model.title()}ListPage(),),);"
+                    __itens_menu += f",icon: FontAwesomeIcons.folderOpen,uri: {__app.title()}{__model}"
+                    __itens_menu += f"Views.{__model}ListPage(),),);"
             return __itens_menu
         except Exception as error:
             Utils.show_message(f"Error in __build_menu_home_page_itens: {error}", error=True)
@@ -567,7 +567,6 @@ class Command(BaseCommand):
                 __app = __current_app.app_name
 
                 for model in __current_app.models:
-                    print(model[1])
                     __import += f"import 'apps/{__app.lower()}/{model[1].lower()}/cubit.dart';\n"
                     _register += f"BlocProvider<{model[1]}Cubit>(create: (_) => {model[1]}Cubit(),),\n"
 
@@ -1615,7 +1614,7 @@ class Command(BaseCommand):
             self.__build_custom_dio()
             self._build_internationalization()
             self.__build_auth_app()
-            # self.__build_flutter()
+            self.__build_flutter()
         else:
             Utils.show_message(
                 "É necessário passar pelo menos um dos parâmetros a seguir: --init_provider, --init_mobx, --init_cubit,"
