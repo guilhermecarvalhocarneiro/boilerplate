@@ -4,6 +4,11 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 
+// Width Height constants
+const heightAppBarPage = 22.0;
+const marginTopCustomAppBar = 12.0;
+const marginHorizontalSectionsDataPage = 12.0;
+
 class Config {
   static const uri = "$DjangoAPIPath$";
   static const uriAuth = "$DjangoAPIPath$";

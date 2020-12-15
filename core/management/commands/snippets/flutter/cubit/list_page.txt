@@ -96,7 +96,14 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
           return customProcessingCardModalCenter(context);
         }
         if (state is $ModelClass$SuccessState){
-            if(state.$ModelClassCamelCase$List != null && state.$ModelClassCamelCase$List.length > 0){
+            if(state.$ModelClassCamelCase$List  == null) {
+                return Container(
+                    child: Center(
+                        child: Text("Nenhum Item Retornado"),
+                    ),
+                );
+            }
+            if (state.$ModelClassCamelCase$List.length > 0){
                 return Container(
                     child: ListView.builder(
                       itemCount: state.$ModelClassCamelCase$List.length,
@@ -120,7 +127,11 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
                     )
                 );
             }
-            return Container();
+            return Container(
+                child: Center(
+                    child: Text("Nenhum Item Retornado"),
+                ),
+            );
         }
         return Container();
       },
