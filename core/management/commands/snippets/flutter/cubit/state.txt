@@ -16,8 +16,12 @@ class $ModelClass$ProcessState extends $ModelClass$State {
 
 class $ModelClass$SuccessState extends $ModelClass$State {
   final String successMessage;
+  final $ModelClass$Model $ModelClassCamelCase$Model;
+  final List<$ModelClass$Model> $ModelClassCamelCase$List;
   $ModelClass$SuccessState({
     this.successMessage,
+    this.$ModelClassCamelCase$Model,
+    this.$ModelClassCamelCase$List,
   });
 
   @override

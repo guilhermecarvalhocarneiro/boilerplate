@@ -84,6 +84,7 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
+      _dio.makeHeadersAuthentication();
       final data = await _dio.getHttp();
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -97,7 +98,8 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> post($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      _dio.makeHeadersAuthentication();
+      final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.postHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -112,7 +114,8 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      _dio.makeHeadersAuthentication();
+      final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.putHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -127,7 +130,8 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      _dio.makeHeadersAuthentication();
+      final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.patchHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -142,7 +146,8 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      _dio.makeHeadersAuthentication();
+      final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.deleteHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         return true;

@@ -92,41 +92,48 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
         }
       },
       builder: (context, state) {
-        final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
         if (state is $ModelClass$ProcessState) {
           return customProcessingCardModalCenter(context);
         }
-        return _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List == null 
-           ? Container() 
-           : Expanded(
-            child: Container(
-             margin: EdgeInsets.only(
-               top: Util.getProportionScreenHeight(
-                    context, Config.marginHead),
-             ),
-             child: ListView.builder(
-              itemCount: _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List.length,
-              itemBuilder: (context, index) {
-                $ModelClass$Model _$ModelClassCamelCase$ = _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$List[index];
-                return GestureDetector(
-                  onTap: () {
-                    _$ModelClassCamelCase$Cubit.$ModelClassCamelCase$Model = _$ModelClassCamelCase$;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => $ModelClass$DetailPage(),
-                      ),
-                    );
-                  },
-                  child: customCard(
-                    context: context,
-                    child: Text(_$ModelClassCamelCase$.toString()),
-                  ),
-                );
-              },
-            )
-          )
-        );
+        if (state is $ModelClass$SuccessState){
+            if(state.$ModelClassCamelCase$List  == null) {
+              return Container(
+                child: Center(
+                  child: Text("Nenhum Item Retornado"),
+                ),
+              );
+            }
+            if (state.$ModelClassCamelCase$List.length > 0){
+              return Container(
+                margin: EdgeInsets.only(top: Util.getHeightSystemBar(context)),
+                height: Util.getProportionScreenHeight(context, 0.8),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: MediaQuery.of(context).size.height / 380,
+                  crossAxisSpacing: 2.0,
+                  mainAxisSpacing: 4.0,
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  children:
+                    List.generate(state.$ModelClassCamelCase$List.length, (index) {
+                      return Card(
+                        child: Container(
+                          child: Center(
+                            child: Text(state.$ModelClassCamelCase$List[index].toString()),
+                          ),
+                        ),
+                      );
+                    }),
+                ),
+              );
+            }
+            return Container(
+                child: Center(
+                    child: Text("Nenhum Item Retornado"),
+                ),
+            );
+        }
+        return Container();
       },
     );
   }
@@ -151,7 +158,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     });
   }
 
-  _makeToast(String texto, {erro = false, altura = 80.0}) async {
+  _makeToast(String texto, {bool erro = false, double altura = 80.0}) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -174,7 +181,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   }
 
   Future<void> _loadData() async {
-    final _$ModelClassCamelCase$Cubit = context.bloc<$ModelClass$Cubit>();
+    final _$ModelClassCamelCase$Cubit = context.read<$ModelClass$Cubit>();
     await _$ModelClassCamelCase$Cubit.fetch();
   }
 }

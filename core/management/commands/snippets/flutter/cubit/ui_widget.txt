@@ -1,16 +1,13 @@
 /// Arquivo contendo os Widgets componentizados da aplicação
 
 import 'dart:ui';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../utils/util.dart';
 import '../utils/config.dart';
 import '../utils/localization.dart';
-import '../apps/auth/controller.dart';
-import '../apps/configuracao/controller.dart';
+import '../apps/configuracao/cubit.dart';
 
 // Constante contendo o valor da proporção da tela padrão
 // utilizado para calcular altura do Head da página e da
@@ -148,28 +145,10 @@ Widget customCard(
     double elevation = 2.0,
     double radius = 4.0,
     double width}) {
-  SettingsController _controller = GetIt.I<SettingsController>();
   try {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
-      child: Observer(builder: (BuildContext context) {
-        return Container(
-          width: width ?? MediaQuery.of(context).size.width,
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius),
-            ),
-            color: backgroundColor ?? _controller.lightTheme == true
-                ? CustomTheme.mainCardLightBackgroundColor
-                : CustomTheme.mainCardDarkBackgroundColor,
-            elevation: elevation,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: child,
-            ),
-          ),
-        );
-      }),
+      child: Container(),
     );
   } catch (error, exception) {
     print("Error: $error, Exception: $exception");
@@ -643,6 +622,35 @@ customSuccessSnackbar(String message, {int secondsDuration = 4}) {
   );
 }
 
+
+/// Componente visual para mostrar um elemento de loading customizado
+///     Parameters:
+///       context -> BuildContext contendo o contexto do App
+///       isCircularIndicator -> bool indicando se o widget é CircularProgressIndicator
+///       lineHeigth -> double contendo a espesura da linha
+///       lineColor -> Color contendo a cor de foreground
+///       backgroundColor -> Color contendo a cor de background
+Widget customProcessingWidget(
+  BuildContext context, {
+  bool isCircularIndicator = true,
+  double lineHeigth,
+  Color lineColor,
+  Color backgroundColor,
+}) {
+  if (isCircularIndicator == true) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      child: CircularProgressIndicator(),
+    );
+  }
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 12.0),
+    child: LinearProgressIndicator(
+      backgroundColor: Colors.white,
+    ),
+  );
+}
+
 /// Componente para mostrar mensagens aos usuário de
 /// ações que retornaram com sucesso
 customErrorSnackbar(String message, {int secondsDuration = 4}) {
@@ -687,10 +695,6 @@ class _HeadWidgetState extends State<HeadWidget> {
 
   /// String contendo o caminho a ser renderizado como background do cabeçalho
   String _urlPath;
-
-  /// Instanciando o controller da Autenticacao
-  AutenticacaoController _autenticacaoController =
-      GetIt.I<AutenticacaoController>();
 
   @override
   void initState() {
@@ -745,7 +749,7 @@ class _HeadWidgetState extends State<HeadWidget> {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Text(
-                  _autenticacaoController.alunoModel.nome,
+                  "",
                   style: Theme.of(context).textTheme.headline5.copyWith(
                       fontWeight: FontWeight.w600,
                       wordSpacing: 0.08,
