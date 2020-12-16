@@ -99,7 +99,7 @@ class $ModelClass$Service {
     try {
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.postHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -115,7 +115,7 @@ class $ModelClass$Service {
     try {
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.putHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -131,7 +131,7 @@ class $ModelClass$Service {
     try {
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.patchHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -147,7 +147,7 @@ class $ModelClass$Service {
     try {
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final _data = FormData.fromMap($ModelClassCamelCase$.toMap());
+      final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.deleteHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         return true;

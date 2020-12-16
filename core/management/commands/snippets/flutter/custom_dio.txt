@@ -39,7 +39,7 @@ class CustomDio {
         receiveTimeout: 5000,
         headers: {
           'Authorization':
-              token != null ? 'Bearer: $token' : 'Bearer: ${Config.DRFToken}'
+              token != null ? '$token' : '${Config.DRFToken}'
         });
     _dio = Dio(options);
     _dio.interceptors.add(CustomDioInterceptor());
