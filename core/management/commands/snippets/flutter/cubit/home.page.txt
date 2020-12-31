@@ -30,10 +30,6 @@ class MyHomePage extends StatefulWidget {
 ///
 ///     _pages = [PaginaUm(), PaginaDois(), PaginaTres(), ..., PaginaN()]
 ///
-/// lembre-se que a quantidade de páginas deve ser igual à quantidade de filhos do parâmetro
-/// items do BottomNavigationBar, também é necessário alterar o valor passado para o body, que
-/// que deve ser _currentPage.
-///
 
 class _MyHomePageState extends State<MyHomePage> {
   PageController _pageController;
@@ -75,8 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // Verificando se ocorreu alteração na conectividade do device
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) {
-        if (result.toString().contains("ConnectivityResult.none") == false) {
-          _utilController.sendEmergencyLocalPost(_userController.model);
+        if (result.toString().contains("ConnectivityResult.none") == true) {
+          // TODO Implementar aqui o que deseja que ocorra quando a conexão for perdida
         }
       },
     );
