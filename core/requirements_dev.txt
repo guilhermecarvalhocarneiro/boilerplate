@@ -7,7 +7,6 @@ arrow==0.14.6
 autopep8==1.4.4
 Babel==2.7.0
 dj-database-url==0.5.0
-django-heroku==0.3.1
 django-js-asset==1.2.2
 docutils==0.15.2
 imagesize==1.1.0
@@ -31,4 +30,4 @@ sphinxjp.themes.dotted==0.1.2
 sqlparse==0.3.0
 xmltodict==0.12.0
 beautifulsoup4==4.9.1
-html5lib
+Faker

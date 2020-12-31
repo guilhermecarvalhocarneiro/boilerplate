@@ -62,7 +62,6 @@ class AuthService {
     AuthModel _authModel = AuthModel();
     try {
       CustomDio _dio = CustomDio(_uri);
-      _dio.makeHeadersAuthentication();
       FormData _data =
           FormData.fromMap({"username": login, "password": password});
       var dataResponse = await _dio.postHttp(_data, uri: _uri);
@@ -177,21 +176,21 @@ class AuthService {
   }
 
 
-  void _success(String message, {int statusCode}) async {
+    void _success(String message, {int statusCode}) async {
     try {
-      Process.finishSuccess(message, status: statusCode);
+      debugPrint("DebugSuccess: AuthService -> $message, Status: $statusCode");
     } catch (e) {
-      debugPrint("Ocorreu um erro no método error: $e");
+      _error("$e", "");
     }
   }
 
   void _error(String error, String exception, {int statusCode}) async {
     try {
-      if (Process.isDioError == false) {
-        Process.finishError(error, exception, status: statusCode);
-      }
-    } catch (e) {
-      debugPrint("Ocorreu um erro no método error: $e");
+      debugPrint(
+          "DebugErro: AuthService -> $error | $exception");
+    } catch (error) {
+      debugPrint(
+          "DebugErro: AuthService ->$error");
     }
   }
 }

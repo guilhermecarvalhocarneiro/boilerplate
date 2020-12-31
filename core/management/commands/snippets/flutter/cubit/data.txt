@@ -39,8 +39,8 @@ class $ModelClass$Data {
       var dbPath = join(dir.path, '$project$.db');
       return await smbt_io.databaseFactoryIo.openDatabase(dbPath);
     } catch (error, exception) {
-      DebugPrint.error(
-          "Erro no método initDB -> error: $error, message: $exception");
+      debugPrint(
+          "DebugErro: no método initDB do $ModelClass$Data -> $error | $exception");
     }
     return null;
   }
@@ -57,7 +57,9 @@ class $ModelClass$Data {
       return _data.map((snapshot){
         final _result = $ModelClass$Model.fromMap(snapshot.value);
       }).toList();
-    } catch (e) {
+    } catch (error, exception) {
+      debugPrint(
+          "DebugErro: no método fetchAll do $ModelClass$Data -> $error | $exception");
       return null;
     } finally {
       _db.close();
@@ -74,7 +76,9 @@ class $ModelClass$Data {
       var _store = smbt.intMapStoreFactory.store(_storeName);
       var _data = await _store.findFirst(_db);
       return $ModelClass$Model.fromMap(_data.value);
-    } catch (e) {
+    } catch (error, exception) {
+      debugPrint(
+          "DebugErro: no método get do $ModelClass$Data -> $error | $exception");
       return null;
     } finally {
       _db.close();
@@ -92,6 +96,8 @@ class $ModelClass$Data {
       await _store.add(_db, $modelClass$.toMap());
       return true;
     } catch (error, exception) {
+      debugPrint(
+          "DebugErro: no método save do $ModelClass$Data -> $error | $exception");
       return false;
     } finally {
       _db.close();
@@ -109,6 +115,8 @@ class $ModelClass$Data {
       await _store.delete(_db);
       return true;
     } catch (error, exception) {
+      debugPrint(
+          "DebugErro: no método deleteAll do $ModelClass$Data -> $error | $exception");
       return false;
     } finally {
       _db.close();
@@ -126,6 +134,8 @@ class $ModelClass$Data {
       await _store.delete(_db);
       return true;
     } catch (error, exception) {
+      debugPrint(
+          "DebugErro: no método delete do $ModelClass$Data -> $error | $exception");
       return false;
     } finally {
       _db.close();
@@ -148,6 +158,8 @@ class $ModelClass$Data {
       );
       return true;
     } catch (error, exception) {
+      debugPrint(
+          "DebugErro: No método save do $ModelClass$Data -> $error | $exception");
       return false;
     } finally {
       _db.close();

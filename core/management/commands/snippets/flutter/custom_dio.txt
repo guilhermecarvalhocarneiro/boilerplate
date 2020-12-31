@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2020.
  *
- * Desenvolvido por.
+ * Desenvolvido por Nuvols Consultoria em TI
+ * 
+ * Analista Responsável
  * Guilherme de Carvalho Carneiro
- * guilherme.carvalho.carneiro@gmail.com
+ * guilherme.carvalho@nuvols.com.br
  *
- * Twitter -> https://twitter.com/GCarneiro
- * Linkedin -> https://www.linkedin.com/in/guilhermecarvalho
- * GitHub -> https://github.com/guilhermecarvalhocarneiro
+ * http://www.nuvols.com.br
+ * falecom@nuvols.com.br
  */
 
 import 'dart:async';
@@ -49,10 +50,6 @@ class CustomDio {
     }
   }
 
-  // Método para construir a Autenticação no cabeçalho
-  Map<String, String> makeHeadersAuthentication(
-      {String token, String contentType = "application/json; charset=utf-8"}) {}
-
   Future<dynamic> getHttp({returnResult = false, String uri}) async {
     try {
       Response _response = await _dio.get(uri ?? _url);
@@ -63,7 +60,7 @@ class CustomDio {
       }
       return null;
     } on DioError catch (error) {
-      debugPrint("DebugError ->Error ao executar o Get no DIO: $error " +
+      debugPrint("DebugError: No método get do Dio -> $error | " +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
 
@@ -79,7 +76,7 @@ class CustomDio {
       }
       return null;
     } on DioError catch (error) {
-      debugPrint("DebugError ->Error ao executar o Post no DIO: $error " +
+      debugPrint("DebugError: No método post do Dio -> $error |" +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
     }
@@ -93,7 +90,7 @@ class CustomDio {
       }
       return null;
     } on DioError catch (error) {
-      debugPrint("DebugError ->Error ao executar o Put no DIO: $error " +
+      debugPrint("DebugError: No método put do Dio -> $error | " +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
     } catch (errorGeneral) {
@@ -109,7 +106,7 @@ class CustomDio {
       }
       return null;
     } on DioError catch (error) {
-      debugPrint("DebugError ->Error ao executar o Patch no DIO: $error " +
+      debugPrint("DebugError: No método patch do Dio -> $error |" +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data}");
 
@@ -125,7 +122,7 @@ class CustomDio {
       }
       return null;
     } on DioError catch (error) {
-      debugPrint("DebugError ->Error ao executar o Delete no DIO: $error " +
+      debugPrint("DebugError: No método delete do Dio -> $error | " +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
 

@@ -46,7 +46,7 @@ class AuthData {
       return await smbt_io.databaseFactoryIo.openDatabase(dbPath);
     } catch (error, exception) {
       debugPrint(
-          "Erro no método initDB -> error: $error, message: $exception");
+          "DebugErro: no método initDB do AuthData -> $error | $exception");
     }
     return null;
   }
@@ -60,6 +60,8 @@ class AuthData {
         final _result = AuthModel.fromMap(snapshot.value);
       }).toList();
     } catch (e) {
+      debugPrint(
+          "DebugErro: no método fetchAll do AuthData -> $error | $exception");
       return null;
     } finally {
       _db.close();
@@ -73,6 +75,8 @@ class AuthData {
       final _data = await _store.findFirst(_db);
       return AuthModel.fromMap(_data.value);
     } catch (e) {
+      debugPrint(
+          "DebugErro: no método get do AuthData -> $error | $exception");
       return null;
     } finally {
       _db.close();
@@ -86,6 +90,8 @@ class AuthData {
       await _store.add(_db, auth.toMap());
       return true;
     } catch (error) {
+      debugPrint(
+          "DebugErro: no método save do AuthData -> $error | $exception");
       return false;
     } finally {
       _db.close();
@@ -99,6 +105,8 @@ class AuthData {
       await _store.delete(_db);
       return true;
     } catch (error) {
+      debugPrint(
+          "DebugErro: no método deleteAll do AuthData -> $error | $exception");
       return false;
     } finally {
       _db.close();
@@ -112,6 +120,8 @@ class AuthData {
       await _store.delete(_db);
       return true;
     } catch (error) {
+      debugPrint(
+          "DebugErro: no método delete do AuthData -> $error | $exception");
       return false;
     } finally {
       _db.close();
@@ -124,6 +134,8 @@ class AuthData {
       final _store = smbt.intMapStoreFactory.store(_storeName);
       return true;
     } catch (error) {
+      debugPrint(
+          "DebugErro: No método save do AuthData -> $error | $exception");
       return false;
     } finally {
       _db.close();

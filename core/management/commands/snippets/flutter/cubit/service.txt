@@ -36,13 +36,8 @@ class $ModelClass$Service {
       String _url = url != null? url: _uri;
       _$ModelClassCamelCase$List?.clear();
       final CustomDio _dio = CustomDio(_url);
-      _dio.makeHeadersAuthentication();
       final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
-        // TODO: Verificar como validar se tem a chave ou não na List
-        // final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
-        // final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
-        // final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
         for (var data in dataResponse) {
           $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
           // _$ModelClassCamelCase$.nextUrl = _next;
@@ -60,7 +55,6 @@ class $ModelClass$Service {
   Future<List<$ModelClass$Model>> getMore(String uri) async {
     try {
       final CustomDio _dio = CustomDio(uri);
-      _dio.makeHeadersAuthentication();
       final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
         final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
@@ -84,7 +78,6 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      _dio.makeHeadersAuthentication();
       final data = await _dio.getHttp();
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -98,7 +91,6 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> post($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       final CustomDio _dio = CustomDio(_uri);
-      _dio.makeHeadersAuthentication();
       final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.postHttp(_data);
       if (data != null) {
@@ -114,7 +106,6 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      _dio.makeHeadersAuthentication();
       final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.putHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
@@ -129,8 +120,7 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> patch($ModelClass$Model $ModelClassCamelCase$) async {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
-      final CustomDio _dio = CustomDio(_uri);
-      _dio.makeHeadersAuthentication();
+      final CustomDio _dio = CustomDio(_uri);    
       final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.patchHttp(_data);
       if (data != null) {
@@ -145,8 +135,7 @@ class $ModelClass$Service {
   Future<bool> delete($ModelClass$Model $ModelClassCamelCase$) async {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
-      final CustomDio _dio = CustomDio(_uri);
-      _dio.makeHeadersAuthentication();
+      final CustomDio _dio = CustomDio(_uri);    
       final _data = $ModelClassCamelCase$.toMap();
       final data = await _dio.deleteHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
@@ -161,17 +150,19 @@ class $ModelClass$Service {
 
   void _success(String message, {int statusCode}) async {
     try {
-      debugPrint("Mensagem: $message, Status: $statusCode");
+      debugPrint("DebugSuccess: $message, Status: $statusCode");
     } catch (e) {
-      debugPrint("Ocorreu um erro no método error: $e");
+      _error("$e", "");
     }
   }
 
   void _error(String error, String exception, {int statusCode}) async {
     try {
-      debugPrint("Error: $error, Exception: $exception");
-    } catch (e) {
-      debugPrint("Ocorreu um erro no método error: $e");
+      debugPrint(
+          "DebugErro: $ModelClass$Service -> $error | $exception");
+    } catch (error) {
+      debugPrint(
+          "DebugErro: $ModelClass$Service ->$error");
     }
   }
 }

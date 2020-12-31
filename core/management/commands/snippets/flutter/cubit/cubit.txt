@@ -55,9 +55,9 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   }
 
   Future<void> reload() async {
+    // TODO Implementar consulta ao servico e tratamento do retorno
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       emit($ModelClass$SuccessState(
         successMessage: "Dados carregados com sucesso."),
       );
@@ -91,9 +91,9 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   }
 
   Future<void> patch($ModelClass$Model $ModelClassCamelCase$) async {
+    // TODO Implementar consulta ao servico e tratamento do retorno
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       emit($ModelClass$SuccessState(
         successMessage: "Dado atualizado com sucesso."),
       );
@@ -103,9 +103,9 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   }
 
   Future<void> delete($ModelClass$Model $ModelClassCamelCase$) async {
+    // TODO Implementar consulta ao servico e tratamento do retorno
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
       emit($ModelClass$SuccessState(
         successMessage: "Dado deletado com sucesso."),
       );

@@ -63,7 +63,7 @@ class _$ModelClass$IndexPageState extends State<$ModelClass$IndexPage>
     });
   }
 
-  _makeToast(String texto, {erro = false, altura = 80.0}) async {
+  _makeToast(String texto) async {
     return showDialog(
       context: context,
       builder: (context) {

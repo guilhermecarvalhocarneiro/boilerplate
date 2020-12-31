@@ -45,7 +45,16 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<$ModelClass$Cubit, $ModelClass$State>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is $ModelClass$ErrorState){
+          _showMessage(state.error, error: true);
+          debugPrint("DebugError: ${state.error}");
+        }
+        if(state is $ModelClass$SuccessState){
+          _showMessage(state.successMessage);
+          debugPrint("DebugSuccess: ${state.successMessage}");
+        }        
+      },
       builder: (context, state) {
         _$Model$ = context.bloc<$ModelClass$Cubit>().$Model$Model;
         return Scaffold(

@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:connectivity/connectivity.dart';
 import 'apps/configuracao/cubit.dart';
 import 'user_interface/widget.dart';
 import 'utils/config.dart';
@@ -38,9 +38,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   PageController _pageController;
   bool bottomNavigationEnable = false;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Declarando o inteiro para controlar qual página deve ser exibida
-  int _page = 0;
+  int _currentPageIndex;
+
+  /// Criando uma GlobalKey para uma página filha do CupertinoTabBar que deve
+  /// ser utilizada para controlar de forma individualizada o fluxo de navegação
+  /// mantendo a posição quando o usuário trocar de Tab no CupertinoTabBar
+  /// Exemplo:
+  ///    [final GlobalKey<NavigatorState> childPageNavKey = GlobalKey<NavigatorState>();]
+
 
   // Declarando uma instancia da Classe dos items do Menu
   final Itens _itensMenuGridView = Itens();
@@ -49,30 +57,72 @@ class _MyHomePageState extends State<MyHomePage> {
   // por meu do bottomNavigationBar
   List<Widget> _pages;
 
-  /// Declarando o Widget da página atual para o caso de ser configurado a
-  /// por meio do ButtonNavigationBar
-  Widget _currentPage;
-
   @override
   void initState() {
-    _itensMenuGridView.make();
     super.initState();
+    _currentPageIndex = 0;
+    SchedulerBinding.instance.addPostFrameCallback(
+      (_) {
+        _itensMenuGridView.make();
+      },
+    );
+    /// Adicionar na listagem abaixo as páginas que serão filhas do CupertinoTabBar
+    _pages = []
+  }
+
+  @override
+  void didChangeDependencies() {
+    // Verificando se ocorreu alteração na conectividade do device
+    subscription = Connectivity().onConnectivityChanged.listen(
+      (ConnectivityResult result) {
+        if (result.toString().contains("ConnectivityResult.none") == false) {
+          _utilController.sendEmergencyLocalPost(_userController.model);
+        }
+      },
+    );
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose(){
+    subscription.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          //title: customAppBarTitle(
-          //  context,
-          //  widget.title,
-          // ),
-          actions: _buildAction(context),
-          backgroundColor: Colors.transparent,
+    return WillPopScope(
+      onWillPop: _willPopScope,
+      child: SafeArea(
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            actions: _buildAction(context),
+            backgroundColor: Colors.transparent,
+          ),
+          body: _buildGridView(context),
+          bottomNavigationBar: _buildBottomNavigationBar(context),
         ),
-        body: _buildGridView(context),
-        bottomNavigationBar: _buildBottomNavigationBar(context));
+      ),
+    );
+  }
+
+  Future<bool> _wilPopScope() async {
+    /// Exemplo de bloco de controle do que deve ocorrer quando usuário 
+    /// clicar no botão de retorno do dispositivo
+    /// 
+    ///  switch (_currentPageIndex) {
+    ///   case 0:
+    ///     if (childPageNavKey.currentState.canPop()) {
+    ///       childPageNavKey.currentState.pop();
+    ///     }
+    ///     break;
+    ///   case N:
+    ///     ...
+    ///   default:
+    ///     return false;
+    /// }
+    return false;
   }
 
   List<Widget> _buildAction(BuildContext context) {
@@ -146,55 +196,49 @@ class _MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
+  /// Método para construir a barra de navegação inferior
+  /// utilizando o componente CupertinoTabScaffold
   Widget _buildBottomNavigationBar(BuildContext context) {
-    if (bottomNavigationEnable == false) return null;
-    return Theme(
-      data: Theme.of(context).copyWith(
-        canvasColor: Theme.of(context).primaryColor,
-        primaryColor: Theme.of(context).accentColor,
-        textTheme: Theme.of(context).textTheme.copyWith(
-              caption: TextStyle(color: Colors.grey[500]),
+    if (bottomNavigationEnable == false){
+      return Container();
+    } 
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+          onTap: (index) {
+            _indexCurrentPage = index;
+          },
+          activeColor: Colors.blueAccent,
+          inactiveColor: Colors.blue,
+          items: [
+            BottomNavigationBarItem(
+              label: "Legenda do Item",
+              // Icone mostrado quando o item não está selecionado
+              icon: Icon(Icons.home_outlined), 
+              // Icone motrado quando o item está selecioando
+              activeIcon: Icon(Icons.home_outlined), 
             ),
-      ),
-      child: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
-            title: Container(height: 0.0),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.favorite,
-            ),
-            title: Container(height: 0.0),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.supervised_user_circle,
-            ),
-            title: Container(height: 0.0),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.grid_on,
-            ),
-            title: Container(height: 0.0),
-          ),
-        ],
-        onTap: _navigationTapped,
-        currentIndex: _page,
-      ),
+          ]),
+      tabBuilder: (context, index) {
+        return Container();
+        // switch (index) {
+        //   case 0:
+        //     return CupertinoTabView(
+        //       navigatorKey: childPageNavKey,
+        //       builder: (context) {
+        //         return CupertinoPageScaffold(child: _pages[0]);
+        //       },
+        //     );
+        //     break;
+        //   default:
+        //     return CupertinoTabView(
+        //       navigatorKey: childPageNavKey,
+        //       builder: (context) {
+        //         return CupertinoPageScaffold(child: _pages[0]);
+        //       },
+        //     );
+        // }
+      },
     );
-  }
-
-  _navigationTapped(int page) {
-    setState(() {
-      _page = page;
-      _currentPage = _pages[_page];
-    });
   }
 }
 
