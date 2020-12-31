@@ -90,11 +90,11 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
       listener: (context, state) {
         if (state is $ModelClass$ErrorState){
           _showMessage(state.error, error: true);
-          debugPrint("DebugError: ${state.error}");
+          debugPrint("DebugError: No método _listBuilder do AppNameListPage  -> ${state.error}");
         }
         if(state is $ModelClass$SuccessState){
           _showMessage(state.successMessage);
-          debugPrint("DebugSuccess: ${state.successMessage}");
+          debugPrint("DebugSuccess: No método _listBuilder do AppNameListPage -> ${state.successMessage}");
         }
       },
       builder: (context, state) {

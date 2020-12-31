@@ -171,7 +171,7 @@ class _$ModelClass$AddPageState extends State<$ModelClass$UpdatePage>
 
       _$Model$Cubit.put(_$Model$);
     }catch (e){
-      debugPrint("DebugError: No método _put do $ModelClass$AddPage -> $e");
+      debugPrint("DebugError: No método _put do $ModelClass$UpdatePage -> $e");
     }
   }
 

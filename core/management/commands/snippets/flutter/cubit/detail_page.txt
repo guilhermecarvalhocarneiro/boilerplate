@@ -48,12 +48,12 @@ class _$ModelClass$DetailPageState extends State<$ModelClass$DetailPage>
       listener: (context, state) {
         if (state is $ModelClass$ErrorState){
           _showMessage(state.error, error: true);
-          debugPrint("DebugError: ${state.error}");
+          debugPrint("DebugError: No método buildPage do AppNameAddPage  -> ${state.error}");
         }
         if(state is $ModelClass$SuccessState){
           _showMessage(state.successMessage);
-          debugPrint("DebugSuccess: ${state.successMessage}");
-        }        
+          debugPrint("DebugSuccess: No método build do AppNameDetailPage -> ${state.successMessage}");
+        }
       },
       builder: (context, state) {
         _$Model$ = context.bloc<$ModelClass$Cubit>().$Model$Model;
