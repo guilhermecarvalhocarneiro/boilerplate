@@ -81,7 +81,7 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> put($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-      $ModelClassCamelCase$Model = await _service.post($ModelClassCamelCase$);
+      $ModelClassCamelCase$Model = await _service.put($ModelClassCamelCase$);
       emit($ModelClass$SuccessState(
         successMessage: "Dado atualizado com sucesso."),
       );
