@@ -16,6 +16,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 import 'model.dart';
 import '../../../utils/config.dart';
@@ -59,8 +60,8 @@ class $ModelClass$Service {
       if (dataResponse != null) {
         final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
         final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
-        final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
-        for (var data in _dataItens) {
+        final _dataItems = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
+        for (var data in _dataItems) {
           $ModelClass$Model _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
           _$ModelClassCamelCase$.nextUrl = _next;
           _$ModelClassCamelCase$.previousUrl = _previous;
@@ -91,7 +92,7 @@ class $ModelClass$Service {
   Future<$ModelClass$Model> post($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = $ModelClassCamelCase$.toMap();
+      final _data = json.encode($ModelClassCamelCase$.toMap());
       final data = await _dio.postHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -106,7 +107,7 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = $ModelClassCamelCase$.toMap();
+      final _data = json.encode($ModelClassCamelCase$.toMap());
       final data = await _dio.putHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -121,7 +122,7 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);    
-      final _data = $ModelClassCamelCase$.toMap();
+      final _data = json.encode($ModelClassCamelCase$.toMap());
       final data = await _dio.patchHttp(_data);
       if (data != null) {
         _$ModelClassCamelCase$ = $ModelClass$Model.fromMap(data);
@@ -136,7 +137,7 @@ class $ModelClass$Service {
     _uri += "${$ModelClassCamelCase$.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);    
-      final _data = $ModelClassCamelCase$.toMap();
+      final _data = json.encode($ModelClassCamelCase$.toMap());
       final data = await _dio.deleteHttp(_data, $ModelClassCamelCase$.id.toString());
       if (data != null) {
         return true;

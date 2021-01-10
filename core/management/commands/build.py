@@ -69,6 +69,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         """Method for adding positional arguments (required) and optional arguments
+
+        Parameters
+        ----------
+        parser
         """
 
         parser.add_argument('App', type=str)
@@ -118,21 +122,83 @@ class Command(BaseCommand):
         )
 
     def __get_verbose_name(self, app_name=None, model_name=None):
+        """
+
+        Parameters
+        ----------
+        app_name
+        model_name
+
+        Returns
+        -------
+
+        """
         return Utils.get_verbose_name(apps, app_name=app_name, model_name=model_name)
 
     def __check_dir(self, path) -> bool:
+        """
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
         return Utils.check_dir(path)
 
     def __check_file(self, path):
+        """
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
         return Utils.check_file(path)
 
     def __check_content(self, path, text_check):
+        """
+
+        Parameters
+        ----------
+        path
+        text_check
+
+        Returns
+        -------
+
+        """
         return Utils.check_content(path, text_check)
 
     def __check_file_is_locked(self, path):
+        """
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
         return Utils.check_file_is_locked(path)
 
     def __get_snippet(self, path):
+        """
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
         return Utils.get_snippet(path)
 
     def __get_model(self):
@@ -220,7 +286,12 @@ class Command(BaseCommand):
             Utils.show_message(f"Error in __manage_list_template : {error}")
 
     def __manage_update_template(self):
-        """Method responsible for generating the App / Model update.html template
+        """
+        Method responsible for generating the App / Model update.html template
+
+        Returns
+        -------
+        None
         """
         try:
             Utils.show_message("Trabalhando na configuração do template de Atualização.")
