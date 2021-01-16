@@ -170,21 +170,22 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
     }
   }
 
-  _showMessage(String message, {bool error = false}) {
-    setState(() {
-      _scaffoldKey.currentState.showSnackBar(
-        error == false
-            ? customSuccessSnackbar(message)
-            : customErrorSnackbar(message),
+  /// Método responsável por mostrar um SnackBar com uma mensagem
+  /// com o texto passada como parâmetro
+   _showMessage(String message, {bool error = false}) {
+    if (message != null && message.isNotEmpty) {
+      setState(() {
+        _scaffoldKey.currentState.showSnackBar(
+          error == false
+              ? customSuccessSnackbar(message)
+              : customErrorSnackbar(message),
         );
-    });
+      });
+    }
   }
 
-  _hideKeyboard(BuildContext context){
-    FocusScope.of(context).requestFocus(FocusNode());
-  }
-
-  _makeToast(String texto) async {
+  /// Método responsável por mostrar um modal com o texto informado
+  void _makeToast(String texto) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -205,4 +206,10 @@ class _$ModelClass$AddPageState extends State<$ModelClass$AddPage>
       },
     );
   }
+
+  /// Método para ocultar o teclado
+  _hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+
 }

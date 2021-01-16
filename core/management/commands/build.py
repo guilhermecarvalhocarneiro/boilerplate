@@ -217,8 +217,8 @@ class Command(BaseCommand):
         """Method responsible for applying the rules of PEP8 in the generated file
         """
         try:
-            __itens_apply_pep8 = [self.path_urls, self.path_form, self.path_views, self.path_serializer]
-            for element in __itens_apply_pep8:
+            __items_apply_pep8 = [self.path_urls, self.path_form, self.path_views, self.path_serializer]
+            for element in __items_apply_pep8:
                 os.system(
                     'autopep8 --in-place --aggressive --aggressive {}'
                     .format(element))
@@ -369,93 +369,35 @@ class Command(BaseCommand):
     def __manage_api_url(self):
         """Method responsible for creating the Rest API urls file for the model
         """
+        # TODO Verificar como agrupar os imports
         try:
             Utils.show_message("Trabalhando na configuração das Urls API do model {}".format(self.model))
             content = self._snippet_api_router
-            content_urls = self._snippet_api_routers
-            content = content.replace("$ModelName$", self.model)
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
-            content_urls = content_urls.replace("$ModelName$", self.model)
-            if self.__check_file(self.path_urls) is False:
-                with open(self.path_urls, 'w', encoding='utf-8') as api_url_file:
-                    api_url_file.write(content_urls + content)
+            content = content.replace("$ModelName$", self.model)
+            if self.__check_file(self.path_api_urls) is False:
+                api_url_file = open(self.path_api_urls, 'w', encoding='utf-8')
+                api_url_file.write(content)
                 return
-
-            if self.__check_content(self.path_urls, " {}ViewAPI".format(self.model)):
-                Utils.show_message("O model informado já possui urls da API configuradas.")
+            content_file = open(self.path_api_urls, 'r', encoding='utf-8')
+            if content_file.read().find(f"{self.model}ViewAPI") != -1:
                 return
+            with open(self.path_api_urls, 'a', encoding='utf-8') as api_url_file:
+                content = content.replace("router = routers.DefaultRouter()", "")
+                content = content.replace("urlpatterns = router.urls", "")
+                content = content.replace("from django.urls import include, path", "")
+                content = content.replace("from rest_framework import routers", "")
+                api_url_file.write(content)
 
-            if self.__check_content(self.path_urls, "router = routers.DefaultRouter()"):
-                content = content.split("\n", 1)[1]
-                content = content.replace('router = routers.DefaultRouter()', '\n')
-                imports = 'router = routers.DefaultRouter()'
-                with fileinput.FileInput(self.path_urls, inplace=True) as api_url_file:
-                    for line in api_url_file:
-                        print(line.replace(imports, imports + '\n' + content), end='')
-
-            elif self.__check_content(self.path_urls, "app_name = \'{}\'".format(self.app)):
-                app_name_url = "app_name = \'{}\'".format(self.app_lower)
-                with fileinput.FileInput(self.path_urls, inplace=True) as api_url_file:
-                    for line in api_url_file:
-                        print(line.replace(app_name_url, app_name_url + '\n' + content), end='')
-
-            if self.__check_content(self.path_urls, "from rest_framework import routers"):
-                content_origin = content_urls.split("\n")
-                content_urls = content_urls.split("\n")[3]
-                arquivo = open(self.path_urls, "r", encoding='utf-8')
-                data = []
-                for line in api_url_file:
-                    if line.startswith('from .views import'):
-                        models = line.split('import')[-1].rstrip()
-                        import_model = ', ' + content_urls.split()[-1]
-                        models += import_model
-                        line = 'from .views import{}\n'.format(models)
-                    data.append(line)
-                api_url_file.close()
-
-                api_url_file = open(self.path_urls, "w", encoding='utf-8')
-                api_url_file.writelines(data)
-                api_url_file.close()
-            elif self.__check_content(self.path_urls, "from .views import"):
-                content_aux = content_urls.split("\n")[1]
-                api_url_file = open(self.path_urls, "r")
-                data = []
-                for line in api_url_file:
-                    if line.startswith('from .views import'):
-                        models = line.split('import')[-1].rstrip()
-                        import_model = ', ' + content_aux.split()[-1]
-                        models += import_model
-                        line = 'from .views import{}\n'.format(models)
-                    data.append(line)
-                api_url_file.close()
-                api_url_file = open(self.path_urls, "w")
-                api_url_file.writelines(data)
-                api_url_file.close()
-                if self.__check_content(self.path_urls, "from django.urls import"):
-                    imports = 'from django.urls import path, include'
-                    with fileinput.FileInput(self.path_urls, inplace=True) as api_url_file:
-                        for line in api_url_file:
-                            print(line.replace(imports, imports + '\n' + content_urls.split("\n")[0]), end='')
-                else:
-                    with open(self.path_urls, 'a', encoding='utf-8') as views:
-                        views.write("\n")
-                        views.write(content_urls)
-            elif self.__check_content(self.path_urls, "from django.urls import"):
-                imports = 'from django.urls import path, include'
-                with fileinput.FileInput(self.path_urls, inplace=True) as api_url_file:
-                    for line in api_url_file:
-                        print(line.replace(imports, imports + '\n' + content_urls), end='')
-            else:
-                with open(self.path_urls, 'a', encoding='utf-8') as views:
-                    views.write("\n")
-                    views.write(content_urls)
         except Exception as error:
+            print("Error ", error)
             Utils.show_message(f"Ocorreu o erro : {error} no __manage_api_url")
 
     def __manage_api_view(self):
         """Method responsible for creating the Rest API VIEWS file for the model
         """
+        # TODO Refatorar para não importar as libs duplicadas
         try:
             Utils.show_message("Trabalhando na configuração das Views da API do model {} ".format(self.model))
             content = self._snippet_api_view
@@ -772,7 +714,6 @@ class Command(BaseCommand):
                     if line.startswith('from .views import'):
                         models = line.split('import')[-1].rstrip()
                         import_model = '{}, '.format(content_urls.split('import')[-1].rstrip())
-                        # import_model = ', ' + content_urls.split('import')[-1].rstrip()
                         models += import_model
                         line = 'from .views import{}\n'.format(models)
                     data.append(line)
@@ -1005,7 +946,6 @@ class Command(BaseCommand):
         elif options['url']:
             Utils.show_message("Trabalhando apenas as urls.")
             self.__manage_url()
-            self.__manage_api_url()
             return
         elif options['forms']:
             Utils.show_message("Trabalhando apenas os forms.")
@@ -1045,6 +985,7 @@ class Command(BaseCommand):
             self.path_views = Path(f"{self.path_app}/views.py")
             self.path_api_views = Path(f"{self.path_app}/api_view.py")
             self.path_urls = Path(f"{self.path_app}/urls.py")
+            self.path_api_urls = Path(f"{self.path_app}/api_urls.py")
             self.path_serializer = Path(f"{self.path_app}/serializers.py")
             self.path_template_dir = Path(
                 f"{self.path_app}/templates/{self.app}")

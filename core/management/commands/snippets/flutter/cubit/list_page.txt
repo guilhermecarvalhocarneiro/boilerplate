@@ -156,15 +156,16 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
 
   /// Método responsável por mostrar um SnackBar com uma mensagem 
   /// com o texto passada como parâmetro
-  void _showMessage(String message, {bool error}) {
-    setState(() {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: error == true ? Colors.red : Colors.blue,
-        ),
-      );
-    });
+   _showMessage(String message, {bool error = false}) {
+    if (message != null && message.isNotEmpty) {
+      setState(() {
+        _scaffoldKey.currentState.showSnackBar(
+          error == false
+              ? customSuccessSnackbar(message)
+              : customErrorSnackbar(message),
+        );
+      });
+    }
   }
 
   /// Método responsável por mostrar um modal com o texto informado
@@ -188,6 +189,11 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
         );
       },
     );
+  }
+
+  /// Método para ocultar o teclado
+  _hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 
   /// Método responsável por carregar os dados da API

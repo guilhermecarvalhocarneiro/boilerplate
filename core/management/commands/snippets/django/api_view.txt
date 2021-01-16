@@ -1,5 +1,5 @@
 
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.decorators import action
 from drf_jsonmask.views import OptimizedQuerySetMixin
 from rest_framework import filters, status

@@ -4,7 +4,7 @@ app_name = '$app_name$'
 
 # URLs do Models $ModelClass$
 urlpatterns = [
-    path('api/$app_name$/', include(router.urls)),
+    path('api/$app_name$/', include('$app_name$.api_urls')),
     path('$app_name$/', $app_title$IndexTemplateView.as_view(), name='$app_name$-index'),
     path('$app_name$/$model_name$/', $ModelClass$ListView.as_view(), name='$model_name$-list'),
     path('$app_name$/$model_name$/create/', $ModelClass$CreateView.as_view(), name='$model_name$-create'),
