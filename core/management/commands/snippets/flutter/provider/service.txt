@@ -36,7 +36,7 @@ class $ModelClass$Service {
       String _url;
       _$ModelClassCamelCase$List?.clear();
       final CustomDio _dio = CustomDio(_url);
-      _dio.makeHeadersAuthentication();
+    
       final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
         final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
@@ -59,7 +59,7 @@ class $ModelClass$Service {
   Future<List<$ModelClass$Model>> getMorel(String uri) async {
     try {
       final CustomDio _dio = CustomDio(uri);
-      _dio.makeHeadersAuthentication();
+    
       final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
         final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";

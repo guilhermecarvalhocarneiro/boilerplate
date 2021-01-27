@@ -81,6 +81,12 @@ __________
 
 ```python manage.py build --parser_html NOME_DA_APP NOME_DO_MODEL```
 
+### Configuração do urlpatterns do projeto no settings
+> O formato da url de inclusão da APP no projeto deve serguir o padrão abaixo
+
+``` path('core'/, include(('model.urls', 'models'), namespace='namespace_model')) ```
+
+
 ### Flutter
 > Manage responsável por gerar o projeto Flutter, é obrigatório determinar qual o gerenciador de estado será utilizado no gerenciamento de estado da aplicação, as possibilidades são MobX (--init_mobx), Provider (--init_provider), Cubit (--init_cubit)
 

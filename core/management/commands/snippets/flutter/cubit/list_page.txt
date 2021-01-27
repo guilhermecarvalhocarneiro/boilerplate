@@ -32,7 +32,9 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this);
-    _loadData();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _loadData();
+    });
   }
 
   @override
@@ -54,7 +56,7 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     );
   }
 
-    Widget _buildBody() {
+  Widget _buildBody() {
     return Stack(
       children: <Widget>[
         HeadWidget(),
@@ -81,14 +83,18 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     );
   }
 
-  _listBuilder() {
+  /// Método responsável por criar o GridView com os 
+  /// dados retornados da API
+  Widget _listBuilder() {
     return BlocConsumer<$ModelClass$Cubit, $ModelClass$State>(
       listener: (context, state) {
         if (state is $ModelClass$ErrorState){
           _showMessage(state.error, error: true);
+          debugPrint("DebugError: No método _listBuilder do AppNameListPage  -> ${state.error}");
         }
         if(state is $ModelClass$SuccessState){
           _showMessage(state.successMessage);
+          debugPrint("DebugSuccess: No método _listBuilder do AppNameListPage -> ${state.successMessage}");
         }
       },
       builder: (context, state) {
@@ -138,8 +144,9 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     );
   }
 
-
-  Future _refresh() async {
+  /// Método para recarregar os dados da API, quando o usuário
+  /// realizar o movimento de puxar a tela para baixa e soltar
+  Future<void> _refresh() async {
     try {
     // TODO implementar o método de refresh da tela
     } catch (error) {
@@ -147,18 +154,22 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     }
   }
 
-  _showMessage(String message, {bool error}) {
-    setState(() {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: error == true ? Colors.red : Colors.blue,
-        ),
-      );
-    });
+  /// Método responsável por mostrar um SnackBar com uma mensagem 
+  /// com o texto passada como parâmetro
+   _showMessage(String message, {bool error = false}) {
+    if (message != null && message.isNotEmpty) {
+      setState(() {
+        _scaffoldKey.currentState.showSnackBar(
+          error == false
+              ? customSuccessSnackbar(message)
+              : customErrorSnackbar(message),
+        );
+      });
+    }
   }
 
-  _makeToast(String texto, {bool erro = false, double altura = 80.0}) async {
+  /// Método responsável por mostrar um modal com o texto informado
+  void _makeToast(String texto) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -180,6 +191,12 @@ class $ModelClass$ListPageState extends State<$ModelClass$ListPage>
     );
   }
 
+  /// Método para ocultar o teclado
+  _hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+
+  /// Método responsável por carregar os dados da API
   Future<void> _loadData() async {
     final _$ModelClassCamelCase$Cubit = context.read<$ModelClass$Cubit>();
     await _$ModelClassCamelCase$Cubit.fetch();

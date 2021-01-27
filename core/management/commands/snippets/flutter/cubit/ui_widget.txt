@@ -100,25 +100,40 @@ Widget customAvatarAppBar() {
 ///     networkImage (default = false) -> Bool para determinar se a imagem é da web ou dos assets
 ///
 Widget customImageCircular(BuildContext context, String path,
-    {double size = 22, bool example = false, bool networkImage = false}) {
+    {double size = 22,
+    bool example = false,
+    bool networkImage = false,
+    BoxFit boxFit = BoxFit.cover}) {
   try {
     if (example == true) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(50),
         child: CachedNetworkImage(
-            imageUrl: 'https://picsum.photos/600', width: size, height: size),
+          imageUrl: 'https://picsum.photos/600',
+          width: size,
+          height: size,
+          fit: boxFit,
+        ),
       );
     } else {
       if (networkImage == true && path.isNotEmpty) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(50),
-          child: CachedNetworkImage(imageUrl: path, width: size, height: size),
+          child: CachedNetworkImage(
+            imageUrl: path,
+            width: size,
+            height: size,
+            fit: boxFit,
+          ),
         );
       } else {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: Image.asset(path, width: size, height: size),
-        );
+        if (path.isNotEmpty) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.asset(path, width: size, height: size),
+          );
+        }
+        return Container();
       }
     }
   } catch (error, exception) {

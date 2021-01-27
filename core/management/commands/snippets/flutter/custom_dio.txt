@@ -1,120 +1,137 @@
-// #FileLocked
+/*
+ * Copyright (c) 2020.
+ *
+ * Desenvolvido por Nuvols Consultoria em TI
+ * 
+ * Analista Responsável
+ * Guilherme de Carvalho Carneiro
+ * guilherme.carvalho@nuvols.com.br
+ *
+ * http://www.nuvols.com.br
+ * falecom@nuvols.com.br
+ */
 
-import 'package:flutter/foundation.dart';
+import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:dio/native_imp.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'config.dart';
 
-class CustomDio extends DioForNative {
+class CustomDio {
+  Dio _dio;
   String _url;
+  // ignore: unused_field
+  String _errorMessage =
+      "Ocorreu um erro ao executar a consulta, favor tentar novamente.";
 
-  CustomDio(String url, [BaseOptions options]) : super(options) {
-    // Adicionando os interceptors
-    interceptors.add(CustomDioInterceptor());
-    _url = "${Config.uri}$url";
-  }
+  CustomDio(
+    String url, {
+    String authenticationToken,
+    String errorMessage,
+    String token,
+    String contentType = "application/json; charset=utf-8",
+  }) {
+    _url = _url = "${Config.uri}$url";
 
-  Map<String, String> makeHeadersAuthentication(
-      {String token, String contentType = "application/json; charset=utf-8"}) {
-    Map<String, String> headersMap;
-    try {
-      if (token != null && token.isNotEmpty) {
-        headersMap = {
-          'Content-Type': contentType,
-          'Authorization': token,
-        };
-      } else {
-        headersMap = {
-          'Content-Type': contentType,
-          'Authorization': Config.DRFToken
-        };
-      }
-    } catch (e) {
-      debugPrint("Erro ao criar o cabeçalho da requisição ${e.toString()}");
+    BaseOptions options = new BaseOptions(
+        baseUrl: url,
+        connectTimeout: 5000,
+        receiveTimeout: 5000,
+        headers: {
+          'Authorization':
+              token != null ? '$token' : '${Config.DRFToken}'
+        });
+    _dio = Dio(options);
+    _dio.interceptors.add(CustomDioInterceptor());
+
+    if (errorMessage != null && errorMessage.isNotEmpty) {
+      _errorMessage = errorMessage;
     }
-    options.headers = headersMap;
-    return headersMap;
   }
 
-  Future<dynamic> getHttp({String uri}) async {
-    _url = uri ?? _url;
+  Future<dynamic> getHttp({returnResult = false, String uri}) async {
     try {
-      Response _response = await this.get(_url);
+      Response _response = await _dio.get(uri ?? _url);
       if (_response.statusCode == 200) {
+        if (returnResult) return _response.data["results"];
+
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      DebugPrint.error("Error ao executar o Get no DIO: $error " +
+      debugPrint("DebugError: No método get do Dio -> $error | " +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+
+      return null;
     }
   }
 
   Future<dynamic> postHttp(data, {String uri}) async {
-    _url = uri ?? _url;
     try {
-      Response _response = await this.post(_url, data: data);
-      if (_response.statusCode == 201) {
+      Response _response = await _dio.post(uri ?? _url, data: data);
+      if (_response.statusCode == 201 || _response.statusCode == 200) {
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      DebugPrint.error("Error ao executar o Post no DIO: $error " +
+      debugPrint("DebugError: No método post do Dio -> $error |" +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
     }
   }
 
   Future<dynamic> putHttp(data, String id, {String uri}) async {
-    _url = uri ?? _url;
     try {
-      Response _response = await this.put(_url, data: data);
-      if (_response.statusCode == 200) {
+      Response _response = await _dio.put(_url, data: data);
+      if (_response.statusCode == 201 || _response.statusCode == 200) {
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      DebugPrint.error("Error ao executar o Put no DIO: $error " +
+      debugPrint("DebugError: No método put do Dio -> $error | " +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+    } catch (errorGeneral) {
+      debugPrint("Erro geral: $errorGeneral");
     }
   }
 
   Future<dynamic> patchHttp(data, {String uri}) async {
-    _url = uri ?? _url;
     try {
-      Response _response = await this.put(_url, data: data);
-      if (_response.statusCode == 200) {
+      Response _response = await _dio.patch(_url, data: data);
+      if (_response.statusCode == 201 || _response.statusCode == 200) {
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      DebugPrint.error("Error ao executar o Patch no DIO: $error " +
+      debugPrint("DebugError: No método patch do Dio -> $error |" +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
-          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+          "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data}");
+
+      return null;
     }
   }
 
   Future<dynamic> deleteHttp(data, String id, {String uri}) async {
-    _url = uri ?? _url;
     try {
-      Response _response = await this.delete(_url, data: data);
-      if (_response.statusCode == 200) {
+      Response _response = await _dio.delete(_url, data: data);
+      if (_response.statusCode == 200 || _response.statusCode == 204) {
         return _response.data;
       }
       return null;
     } on DioError catch (error) {
-      DebugPrint.error("Error ao executar o Delete no DIO: $error " +
+      debugPrint("DebugError: No método delete do Dio -> $error | " +
           "\nResponse:${error.response.data.toString()} \nRequest: ${error.request.uri} " +
           "\nHeader: ${error.request.headers.toString().replaceAll(",", "\n    ")} \nData: ${error.request.data.toString()}");
+
+      return null;
     }
   }
 }
 
-class CustomDioInterceptor extends InterceptorsWrapper {
+class CustomDioInterceptor extends Interceptor {
   @override
   Future onRequest(RequestOptions options) {
     options.connectTimeout = 50000;

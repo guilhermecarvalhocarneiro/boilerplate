@@ -42,11 +42,13 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> fetch() async {
     try {
       emit($ModelClass$ProcessState());
+      $ModelClassCamelCase$List?.clear();
       $ModelClassCamelCase$List = await _service.fetch();
       emit(
         $ModelClass$SuccessState(
-            successMessage: "Dados carregados com sucesso.",
-            $ModelClassCamelCase$List: $ModelClassCamelCase$List,
+          successMessage: "Dados carregados com sucesso.",
+          $ModelClassCamelCase$List: $ModelClassCamelCase$List,
+          $ModelClassCamelCase$Model: $ModelClassCamelCase$Model,
         ),
       );
     } catch (e) {
@@ -57,9 +59,12 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> reload() async {
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
+      $ModelClassCamelCase$List?.clear();
       emit($ModelClass$SuccessState(
-        successMessage: "Dados carregados com sucesso."),
+          successMessage: "Dados carregados com sucesso.",
+          $ModelClassCamelCase$List: $ModelClassCamelCase$List,
+          $ModelClassCamelCase$Model: $ModelClassCamelCase$Model,
+        ),
       );
     } catch (e) {
       emit($ModelClass$ErrorState(e.toString()));
@@ -69,9 +74,12 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> post($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-       $ModelClassCamelCase$Model = await _service.post($ModelClassCamelCase$);
+      $ModelClassCamelCase$Model = await _service.post($ModelClassCamelCase$);
       emit($ModelClass$SuccessState(
-        successMessage: "Dados salvos com sucesso."),
+          successMessage: "Dados carregados com sucesso.",
+          $ModelClassCamelCase$List: $ModelClassCamelCase$List,
+          $ModelClassCamelCase$Model: $ModelClassCamelCase$Model,
+        ),
       );
     } catch (e) {
       emit($ModelClass$ErrorState(e.toString()));
@@ -81,9 +89,11 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> put($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-      $ModelClassCamelCase$Model = await _service.post($ModelClassCamelCase$);
+      $ModelClassCamelCase$Model = await _service.put($ModelClassCamelCase$);
       emit($ModelClass$SuccessState(
-        successMessage: "Dado atualizado com sucesso."),
+        successMessage: "Dados carregados com sucesso.",
+        $ModelClassCamelCase$List: $ModelClassCamelCase$List,
+        $ModelClassCamelCase$Model: $ModelClassCamelCase$Model,),
       );
     } catch (e) {
       emit($ModelClass$ErrorState(e.toString()));
@@ -93,9 +103,12 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> patch($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
+      $ModelClassCamelCase$Model = await _service.patch($ModelClassCamelCase$);
       emit($ModelClass$SuccessState(
-        successMessage: "Dado atualizado com sucesso."),
+          successMessage: "Dados carregados com sucesso.",
+          $ModelClassCamelCase$List: $ModelClassCamelCase$List,
+          $ModelClassCamelCase$Model: $ModelClassCamelCase$Model,
+        ),
       );
     } catch (e) {
       emit($ModelClass$ErrorState(e.toString()));
@@ -105,9 +118,12 @@ class $ModelClass$Cubit extends Cubit<$ModelClass$State> {
   Future<void> delete($ModelClass$Model $ModelClassCamelCase$) async {
     try {
       emit($ModelClass$ProcessState());
-      // TODO Cubit: Implementar consulta ao servico e tratamento do retorno
+      await _service.patch($ModelClassCamelCase$);
       emit($ModelClass$SuccessState(
-        successMessage: "Dado deletado com sucesso."),
+          successMessage: "Dados carregados com sucesso.",
+          $ModelClassCamelCase$List: $ModelClassCamelCase$List,
+          $ModelClassCamelCase$Model: $ModelClassCamelCase$Model,
+        ),
       );
     } catch (e) {
       emit($ModelClass$ErrorState(e.toString()));

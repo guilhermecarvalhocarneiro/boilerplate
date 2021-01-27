@@ -6,3 +6,5 @@ django_select2
 beautifulsoup4==4.9.1
 dateparser==0.7.6
 html5lib
+validate-docbr
+django-filter

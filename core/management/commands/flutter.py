@@ -337,7 +337,7 @@ class Command(BaseCommand):
             os.path.dirname(os.path.abspath(__file__))))
     )
 
-    _tipos_originais = [
+    _django_types = [
         "SmallAutoField", "AutoField", "BLANK_CHOICE_DASH", "BigAutoField", "BigIntegerField",
         "BinaryField", "BooleanField", "CharField", "CommaSeparatedIntegerField",
         "DateField", "DateTimeField", "DecimalField", "DurationField",
@@ -348,7 +348,7 @@ class Command(BaseCommand):
         "TextField", "TimeField", "URLField", "UUIDField", "ForeignKey", "OneToOneField",
     ]
 
-    _tipos_flutter = [
+    _flutter_types = [
         "int", "int", "BLANK_CHOICE_DASH",
         "int", "int", "String", "bool", "String",
         "String", "DateTime", "DateTime", "double", "int",
@@ -358,7 +358,7 @@ class Command(BaseCommand):
         "String", "DateTime", "String", "String", "String", "int",
     ]
 
-    _tipos_sqlite = [
+    _sqlite_types = [
         "INT", "INT", "BLANK_CHOICE_DASH",
         "BIGINT", "BIGINT", "TEXT",
         "BOOLEAN", "TEXT", "TEXT",
@@ -372,6 +372,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         """Method for adding positional arguments (required) and optional arguments
+
+        Parameters
+        ----------
+        parser
         """
 
         parser.add_argument("App", type=str, nargs="?")
@@ -519,20 +523,20 @@ class Command(BaseCommand):
         except Exception as error:
             Utils.show_message(f"Error in __build_flutter: {error}", error=True)
 
-    def __build_menu_home_page_itens(self):
+    def __build_menu_home_page_items(self):
         """Method responsible for generating the flutter code that creates the navigation component using cards
            from the APP's home screen."""
         try:
-            __itens_menu = ""
+            __items_menu = ""
             for app in FLUTTER_APPS:
                 __current_app = AppModel(self.flutter_project, app)
                 __app = __current_app.app_name
                 for model in __current_app.models:
                     __model = model[1]
-                    __itens_menu += f"list.add(Itens(title: '{__model.title()}'"
-                    __itens_menu += f",icon: FontAwesomeIcons.folderOpen,uri: {__app.title()}{__model}"
-                    __itens_menu += f"Views.{__model}ListPage(),),);"
-            return __itens_menu
+                    __items_menu += f"list.add(Itens(title: '{__model.title()}'"
+                    __items_menu += f",icon: FontAwesomeIcons.folderOpen,uri: {__app.title()}{__model}"
+                    __items_menu += f"Views.{__model}ListPage(),),);"
+            return __items_menu
         except Exception as error:
             Utils.show_message(f"Error in __build_menu_home_page_itens: {error}", error=True)
 
@@ -778,7 +782,7 @@ class Command(BaseCommand):
                     .replace('["', "")
                     .replace("'>\"]", ""))
 
-                attribute = self._tipos_flutter[self._tipos_originais.index(field_type)]
+                attribute = self._flutter_types[self._django_types.index(field_type)]
                 content_attributes += "  final _{0}Form{1} = TextEditingController();\n".format(
                     self.__to_camel_case(app.model_name, True), __nameTitle)
                 text_field = content_form
@@ -1123,7 +1127,7 @@ class Command(BaseCommand):
                     str(str(type(field)).split(".")[-1:])
                     .replace('["', "")
                     .replace("'>\"]", ""))
-                attribute = self._tipos_flutter[self._tipos_originais.index(
+                attribute = self._flutter_types[self._django_types.index(
                     field_type)]
 
                 content_attributes += "{} {};\n  ".format(attribute, __name_dart)
@@ -1564,7 +1568,7 @@ class Command(BaseCommand):
                 return
             __snippet_page = self.__get_snippet(
                 file_name="home.page.txt", state_manager=True)
-            __menu_home_page_itens = self.__build_menu_home_page_itens()
+            __menu_home_page_itens = self.__build_menu_home_page_items()
 
             if self.state_manager == StateManager.Provider or self.state_manager == StateManager.Cubit:
                 __snippet_page = __snippet_page.replace("$ImportViews$", __import_views)

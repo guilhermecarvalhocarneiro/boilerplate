@@ -69,6 +69,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         """Method for adding positional arguments (required) and optional arguments
+
+        Parameters
+        ----------
+        parser
         """
 
         parser.add_argument('App', type=str)
@@ -118,21 +122,83 @@ class Command(BaseCommand):
         )
 
     def __get_verbose_name(self, app_name=None, model_name=None):
+        """
+
+        Parameters
+        ----------
+        app_name
+        model_name
+
+        Returns
+        -------
+
+        """
         return Utils.get_verbose_name(apps, app_name=app_name, model_name=model_name)
 
     def __check_dir(self, path) -> bool:
+        """
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
         return Utils.check_dir(path)
 
     def __check_file(self, path):
+        """
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
         return Utils.check_file(path)
 
     def __check_content(self, path, text_check):
+        """
+
+        Parameters
+        ----------
+        path
+        text_check
+
+        Returns
+        -------
+
+        """
         return Utils.check_content(path, text_check)
 
     def __check_file_is_locked(self, path):
+        """
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
         return Utils.check_file_is_locked(path)
 
     def __get_snippet(self, path):
+        """
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
         return Utils.get_snippet(path)
 
     def __get_model(self):
@@ -151,8 +217,8 @@ class Command(BaseCommand):
         """Method responsible for applying the rules of PEP8 in the generated file
         """
         try:
-            __itens_apply_pep8 = [self.path_urls, self.path_form, self.path_views, self.path_serializer]
-            for element in __itens_apply_pep8:
+            __items_apply_pep8 = [self.path_urls, self.path_form, self.path_views, self.path_serializer]
+            for element in __items_apply_pep8:
                 os.system(
                     'autopep8 --in-place --aggressive --aggressive {}'
                     .format(element))
@@ -220,7 +286,12 @@ class Command(BaseCommand):
             Utils.show_message(f"Error in __manage_list_template : {error}")
 
     def __manage_update_template(self):
-        """Method responsible for generating the App / Model update.html template
+        """
+        Method responsible for generating the App / Model update.html template
+
+        Returns
+        -------
+        None
         """
         try:
             Utils.show_message("Trabalhando na configuração do template de Atualização.")
@@ -298,98 +369,35 @@ class Command(BaseCommand):
     def __manage_api_url(self):
         """Method responsible for creating the Rest API urls file for the model
         """
+        # TODO Verificar como agrupar os imports
         try:
             Utils.show_message("Trabalhando na configuração das Urls API do model {}".format(self.model))
             content = self._snippet_api_router
-            content_urls = self._snippet_api_routers
-            content = content.replace("$ModelName$", self.model)
             content = content.replace("$app_name$", self.app_lower)
             content = content.replace("$model_name$", self.model_lower)
-            content_urls = content_urls.replace("$ModelName$", self.model)
-            if self.__check_file(self.path_urls) is False:
-                with open(self.path_urls, 'w', encoding='utf-8') as arquivo:
-                    arquivo.write(content_urls + content)
+            content = content.replace("$ModelName$", self.model)
+            if self.__check_file(self.path_api_urls) is False:
+                api_url_file = open(self.path_api_urls, 'w', encoding='utf-8')
+                api_url_file.write(content)
                 return
-
-            if self.__check_content(self.path_urls, " {}ViewAPI".format(self.model)):
-                Utils.show_message("O model informado já possui urls da API configuradas.")
+            content_file = open(self.path_api_urls, 'r', encoding='utf-8')
+            if content_file.read().find(f"{self.model}ViewAPI") != -1:
                 return
+            with open(self.path_api_urls, 'a', encoding='utf-8') as api_url_file:
+                content = content.replace("router = routers.DefaultRouter()", "")
+                content = content.replace("urlpatterns = router.urls", "")
+                content = content.replace("from django.urls import include, path", "")
+                content = content.replace("from rest_framework import routers", "")
+                api_url_file.write(content)
 
-            if self.__check_content(self.path_urls, "router = routers.DefaultRouter()"):
-                content = content.split("\n", 1)[1]
-                content = content.replace(
-                    'router = routers.DefaultRouter()', '\n')
-                imports = 'router = routers.DefaultRouter()'
-                with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
-                    for line in arquivo:
-                        print(line.replace(
-                            imports, imports + '\n' + content), end='')
-
-            elif self.__check_content(self.path_urls, "app_name = \'{}\'".format(self.app)):
-                app_name_url = "app_name = \'{}\'".format(self.app_lower)
-                with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
-                    for line in arquivo:
-                        print(line.replace(
-                            app_name_url, app_name_url + '\n' + content), end='')
-
-            if self.__check_content(self.path_urls, "from rest_framework import routers"):
-                content_origin = content_urls.split("\n")
-                content_urls = content_urls.split("\n")[3]
-                arquivo = open(self.path_urls, "r", encoding='utf-8')
-                data = []
-                for line in arquivo:
-                    if line.startswith('from .views import'):
-                        models = line.split('import')[-1].rstrip()
-                        import_model = ', ' + content_urls.split()[-1]
-                        models += import_model
-                        line = 'from .views import{}\n'.format(models)
-                    data.append(line)
-                arquivo.close()
-
-                arquivo = open(self.path_urls, "w", encoding='utf-8')
-                arquivo.writelines(data)
-                arquivo.close()
-            elif self.__check_content(self.path_urls, "from .views import"):
-                content_aux = content_urls.split("\n")[1]
-                arquivo = open(self.path_urls, "r")
-                data = []
-                for line in arquivo:
-                    if line.startswith('from .views import'):
-                        models = line.split('import')[-1].rstrip()
-                        import_model = ', ' + content_aux.split()[-1]
-                        models += import_model
-                        line = 'from .views import{}\n'.format(models)
-                    data.append(line)
-                arquivo.close()
-                arquivo = open(self.path_urls, "w")
-                arquivo.writelines(data)
-                arquivo.close()
-                if self.__check_content(self.path_urls, "from django.urls import"):
-                    imports = 'from django.urls import path, include'
-                    with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
-                        for line in arquivo:
-                            print(line.replace(
-                                imports, imports + '\n' + content_urls.split("\n")[0]), end='')
-                else:
-                    with open(self.path_urls, 'a', encoding='utf-8') as views:
-                        views.write("\n")
-                        views.write(content_urls)
-            elif self.__check_content(self.path_urls, "from django.urls import"):
-                imports = 'from django.urls import path, include'
-                with fileinput.FileInput(self.path_urls, inplace=True) as arquivo:
-                    for line in arquivo:
-                        print(line.replace(
-                            imports, imports + '\n' + content_urls), end='')
-            else:
-                with open(self.path_urls, 'a', encoding='utf-8') as views:
-                    views.write("\n")
-                    views.write(content_urls)
         except Exception as error:
+            print("Error ", error)
             Utils.show_message(f"Ocorreu o erro : {error} no __manage_api_url")
 
     def __manage_api_view(self):
         """Method responsible for creating the Rest API VIEWS file for the model
         """
+        # TODO Refatorar para não importar as libs duplicadas
         try:
             Utils.show_message("Trabalhando na configuração das Views da API do model {} ".format(self.model))
             content = self._snippet_api_view
@@ -397,20 +405,20 @@ class Command(BaseCommand):
             content_urls = self._snippet_api_urls
             content = content.replace("$ModelName$", self.model)
             content_urls = content_urls.replace("$ModelName$", self.model)
-            if self.__check_file(self.path_views) is False:
-                with open(self.path_views, 'w', encoding='utf-8') as arquivo:
-                    arquivo.write(content_urls + content)
+            if self.__check_file(self.path_api_views) is False:
+                with open(self.path_api_views, 'w', encoding='utf-8') as api_views_file:
+                    api_views_file.write(content_urls + content)
                 return
 
-            if self.__check_content(self.path_views, " {}ViewAPI".format(self.model)):
+            if self.__check_content(self.path_api_views, " {}ViewAPI".format(self.model)):
                 Utils.show_message("O model informado já possui views da API configurado.")
                 return
 
-            if self.__check_content(self.path_views, self.model) is False:
+            if self.__check_content(self.path_api_views, self.model) is False:
                 content_models = content_urls.split("\n")[5]
-                arquivo = open(self.path_views, "r", encoding='utf-8')
+                api_views_file = open(self.path_api_views, "r", encoding='utf-8')
                 data = []
-                for line in arquivo:
+                for line in api_views_file:
                     if line.startswith('from .models import'):
                         models = line.split('import')[-1].rstrip()
                         if len(content_models.split()) == 0:
@@ -419,46 +427,47 @@ class Command(BaseCommand):
                         models += import_model
                         line = 'from .models import{}\n'.format(models)
                     data.append(line)
-                arquivo.close()
+                api_views_file.close()
 
-                arquivo = open(self.path_views, "w", encoding='utf-8')
-                arquivo.writelines(data)
-                arquivo.close()
+                api_views_file = open(self.path_api_views, "w", encoding='utf-8')
+                api_views_file.writelines(data)
+                api_views_file.close()
             else:
                 content_urls = content_urls.rsplit("\n", 1)[0]
 
-            if self.__check_content(self.path_views, "from rest_framework.viewsets import ModelViewSet"):
+            if self.__check_content(self.path_api_views, "from rest_framework.viewsets import ModelViewSet"):
                 content_urls = content_urls.split("\n")[4]
-                arquivo = open(self.path_views, "r", encoding='utf-8')
+                api_views_file = open(self.path_api_views, "r", encoding='utf-8')
                 data = []
-                for line in arquivo:
+                for line in api_views_file:
                     if line.startswith('from .serializers import'):
                         models = line.split('import')[-1].rstrip()
                         import_model = ', ' + content_urls.split()[-1]
                         models += import_model
-                        line = 'from .serializers import{}\n'.format(models)
+                        line = 'from .serializers import{}, {}\n'.format(
+                            models, models.replace("Serializer", "GETSerializer"))
                     data.append(line)
-                arquivo.close()
+                api_views_file.close()
 
-                arquivo = open(self.path_views, "w", encoding='utf-8')
-                arquivo.writelines(data)
-                arquivo.close()
-            elif self.__check_content(self.path_views, "from nuvols.core.views"):
+                api_views_file = open(self.path_api_views, "w", encoding='utf-8')
+                api_views_file.writelines(data)
+                api_views_file.close()
+            elif self.__check_content(self.path_api_views, "from nuvols.core.views"):
                 imports = "\n\n"
                 imports += 'from nuvols.core.views import BaseListView, BaseDeleteView, BaseDetailView, '
                 imports += 'BaseUpdateView, BaseCreateView, BaseTemplateView'
                 imports_rest = '\n{}\n{}\n{}\n{}\n'.format(content_urls.split("\n")[0], content_urls.split("\n")[1],
                                                            content_urls.split("\n")[2], content_urls.split("\n")[3])
-                with fileinput.FileInput(self.path_views, inplace=True) as arquivo:
-                    for line in arquivo:
+                with fileinput.FileInput(self.path_api_views, inplace=True) as api_views_file:
+                    for line in api_views_file:
                         print(line.replace(
                             imports, imports + imports_rest + content_urls.split("\n")[4]), end='')
             else:
-                with open(self.path_views, 'a', encoding='utf-8') as views:
+                with open(self.path_api_views, 'a', encoding='utf-8') as views:
                     views.write("\n")
                     views.write(content_urls)
 
-            with open(self.path_views, 'a', encoding='utf-8') as api_views:
+            with open(self.path_api_views, 'a', encoding='utf-8') as api_views:
                 api_views.write("\n")
                 api_views.write(content)
         except Exception as error:
@@ -488,20 +497,20 @@ class Command(BaseCommand):
 
             if self.__check_content(self.path_serializer, "from rest_framework.serializers import ModelSerializer"):
                 content_urls = content_urls.split("\n")[1]
-                arquivo = open(self.path_serializer, "r")
+                serializer_file = open(self.path_serializer, "r")
                 data = []
-                for line in arquivo:
+                for line in serializer_file:
                     if line.startswith('from .models import'):
                         models = line.split('import')[-1].rstrip()
                         import_model = ', ' + content_urls.split()[-1]
                         models += import_model
                         line = 'from .models import{}\n'.format(models)
                     data.append(line)
-                arquivo.close()
+                serializer_file.close()
 
-                arquivo = open(self.path_serializer, "w", encoding='utf-8')
-                arquivo.writelines(data)
-                arquivo.close()
+                serializer_file = open(self.path_serializer, "w", encoding='utf-8')
+                serializer_file.writelines(data)
+                serializer_file.close()
             else:
                 with open(self.path_serializer, 'a', encoding='utf-8') as views:
                     views.write(content_urls)
@@ -687,8 +696,8 @@ class Command(BaseCommand):
                 content_urls = content_urls.replace(
                     "$AppIndexTemplate$", "{}IndexTemplateView".format(self.app.title()))
             if self.__check_file(self.path_urls) is False:
-                with open(self.path_urls, 'w', encoding='utf-8') as arquivo:
-                    arquivo.write(content_urls + '\n' + content)
+                with open(self.path_urls, 'w', encoding='utf-8') as url_file:
+                    url_file.write(content_urls + '\n' + content)
                 return
 
             if self.__check_file_is_locked(self.path_urls) is True:
@@ -699,22 +708,20 @@ class Command(BaseCommand):
 
             if self.__check_content(self.path_urls, "from .views import"):
                 content_urls = content_urls.split("\n")[1]
-                arquivo = open(self.path_urls, "r", encoding='utf-8')
+                url_file = open(self.path_urls, "r", encoding='utf-8')
                 data = []
-                for line in arquivo:
+                for line in url_file:
                     if line.startswith('from .views import'):
                         models = line.split('import')[-1].rstrip()
-                        import_model = ', ' + \
-                                       content_urls.split(
-                                           'import')[-1].rstrip()
+                        import_model = '{}, '.format(content_urls.split('import')[-1].rstrip())
                         models += import_model
                         line = 'from .views import{}\n'.format(models)
                     data.append(line)
-                arquivo.close()
+                url_file.close()
 
-                arquivo = open(self.path_urls, "w", encoding='utf-8')
-                arquivo.writelines(data)
-                arquivo.close()
+                url_file = open(self.path_urls, "w", encoding='utf-8')
+                url_file.writelines(data)
+                url_file.close()
             else:
                 with open(self.path_urls, 'a', encoding='utf-8') as views:
                     views.write(content_urls)
@@ -939,7 +946,6 @@ class Command(BaseCommand):
         elif options['url']:
             Utils.show_message("Trabalhando apenas as urls.")
             self.__manage_url()
-            self.__manage_api_url()
             return
         elif options['forms']:
             Utils.show_message("Trabalhando apenas os forms.")
@@ -977,7 +983,9 @@ class Command(BaseCommand):
             self.path_model = Path(f"{self.path_app}/models.py")
             self.path_form = Path(f"{self.path_app}/forms.py")
             self.path_views = Path(f"{self.path_app}/views.py")
+            self.path_api_views = Path(f"{self.path_app}/api_view.py")
             self.path_urls = Path(f"{self.path_app}/urls.py")
+            self.path_api_urls = Path(f"{self.path_app}/api_urls.py")
             self.path_serializer = Path(f"{self.path_app}/serializers.py")
             self.path_template_dir = Path(
                 f"{self.path_app}/templates/{self.app}")
