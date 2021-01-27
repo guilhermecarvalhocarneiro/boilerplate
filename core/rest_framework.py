@@ -1,13 +1,8 @@
-from collections import Mapping
-import copy
-import inspect
-import traceback
 from collections import OrderedDict
 from collections.abc import Mapping
+
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import get_error_detail, set_value
-from rest_framework.exceptions import ErrorDetail, ValidationError
-
-
 from rest_framework.serializers import ModelSerializer
 
 
@@ -38,7 +33,7 @@ class Serializador(ModelSerializer):
                     validated_value = validate_method(validated_value)
             except ValidationError as exc:
                 # errors[field.field_name] = exc.detail
-                #Padrão definido para retorno do error
+                # Padrão definido para retorno do error
                 errors["error_message"] = {field.field_name: exc.detail}
 
             except DjangoValidationError as exc:
