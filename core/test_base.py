@@ -1,6 +1,6 @@
+from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
-from django.contrib.auth.models import User
 
 
 class BaseApiTestCase(APITestCase):
@@ -28,5 +28,3 @@ class BaseApiTestCase(APITestCase):
 
     def get_url_custom(self, app, modelo, metodo):
         return '/core/api/{0}/{1}/{2}/?format=json'.format(app, modelo, metodo)
-
-

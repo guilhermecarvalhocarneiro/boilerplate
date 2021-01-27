@@ -4,9 +4,7 @@ from django.contrib.auth import get_permission_codename
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRel
 from django.db import models
 from django.db import transaction
-from django.db.models import (AutoField, ManyToManyField,
-                              ManyToOneRel, ManyToManyRel,
-                              OneToOneRel, BooleanField,
+from django.db.models import (AutoField, ManyToManyField, ManyToOneRel, ManyToManyRel, OneToOneRel, BooleanField,
                               FileField, ImageField)
 from rest_framework.pagination import PageNumberPagination
 

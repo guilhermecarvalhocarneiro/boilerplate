@@ -10,29 +10,21 @@ from locale import normalize
 import pytz
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.contrib.auth.models import User
-from django.contrib.auth.views import (LoginView, LogoutView,
-                                       PasswordResetCompleteView)
+from django.contrib.auth.views import (LoginView)
 from django.core.exceptions import (FieldDoesNotExist, FieldError,
                                     ValidationError)
-from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor, ManyToManyDescriptor
 from django.core.mail import EmailMessage
-from django.db.models import (AutoField, ForeignKey, ManyToManyField,
-                              ManyToManyRel, ManyToOneRel, Q)
-from django.db.models.fields import AutoField
+from django.db.models import (ForeignKey, Q)
 from django.db.models.fields import BooleanField as BooleanFieldModel
+from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor, ManyToManyDescriptor
 from django.db.models.query_utils import DeferredAttribute
-from django.forms.fields import BooleanField
-from django.forms.models import inlineformset_factory
 from django.http import HttpResponse
-from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.urls.base import resolve
-from django.utils.text import camel_case_to_spaces, slugify
+from django.utils.text import camel_case_to_spaces
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import (CreateView, DeleteView, UpdateView)
