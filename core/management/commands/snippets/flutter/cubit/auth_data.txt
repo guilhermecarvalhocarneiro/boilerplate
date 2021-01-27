@@ -56,9 +56,9 @@ class AuthData {
       _db = await initDb();
       final _store = smbt.intMapStoreFactory.store(_storeName);
       final _data = await _store.find(_db);
-      return _data.map((snapshot) {
-        final _result = AuthModel.fromMap(snapshot.value);
-      }).toList();
+      return _data
+          .map((snapshot) => AuthModel.fromMap(snapshot.value))
+          .toList();
     } catch (e) {
       debugPrint(
           "DebugErro: no método fetchAll do AuthData -> $error | $exception");
