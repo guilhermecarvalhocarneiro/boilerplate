@@ -42,7 +42,7 @@ try:
 
     API_PATH = settings.API_PATH
 except:
-    pass
+    API_PATH = "http://localhost:8000"
 
 # Carregando as apps que será gerada a documentação utilizando o Sphinx
 try:

@@ -8,3 +8,4 @@ dateparser==0.7.6
 html5lib
 validate-docbr
 django-filter
+drf-jsonmask

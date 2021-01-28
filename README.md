@@ -54,10 +54,16 @@ Adicionar no settings a lista abaixo, com as apps que deseja gerar a documentaç
 ### Configurações para funcionamento do manager flutter  
 > Manage responsável por gerar o projeto Flutter.
 
+### Requisito: Ter o Flutter e o Dart instalado na máquina
+> https://flutter.dev/docs/get-started/install
+
 Adicionar no settings a lista abaixo, com as apps que deseja trabalhar no projeto Flutter
 
 ```FLUTTER_APPS = ['nome_da_app_1', 'nome_da_app_2']```
 
+Adicionar no settings o parâmetro API_PATH com o caminho padrão da APIRest
+
+```API_PATH = http://..../```
 __________
 
 ## Executando os manager's  
