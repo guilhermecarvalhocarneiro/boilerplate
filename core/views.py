@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.contrib.auth.models import User
-from django.contrib.auth.views import (LoginView)
+from django.contrib.auth.views import (LoginView, LogoutView)
 from django.core.exceptions import (FieldDoesNotExist, FieldError,
                                     ValidationError)
 from django.core.mail import EmailMessage
@@ -1116,6 +1116,10 @@ class BaseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 class LoginView(LoginView):
     redirect_authenticated_user = True
+    template_name = 'core/registration/login.html'
+
+
+class LogoutView(LogoutView):
     template_name = 'core/registration/login.html'
 
 
