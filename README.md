@@ -15,6 +15,7 @@ As funcionalidades desse projeto são:
 
 Para que o projeto funcione corretamente devem ser seguidas as etapas a seguir.
 
+### Versão do Django <= 3.0.7
 
 1. Adicionar o core no INSTALLED_APPS do settings
     ```
